@@ -146,3 +146,22 @@ nacimiento-memory-egg/
   LICENSE
   ASSET-LICENSE.md
   .gitignore
+
+```
+
+| Folder        | Meaning                                  |
+| ------------- | ---------------------------------------- |
+| `controllers` | Handles API request/response             |
+| `routes`      | Defines API URLs                         |
+| `models`      | Database entities/queries                |
+| `services`    | Main business/game logic                 |
+| `middleware`  | Checks before request reaches controller |
+| `validators`  | Validates user input                     |
+| `tests`       | Automated tests                          |
+| `components`  | Reusable frontend UI pieces              |
+| `pages`       | Full frontend screens                    |
+| `api`         | Frontend backend-call functions          |
+| `hooks`       | Reusable React logic                     |
+| `assets`      | Images, icons, music, static files       |
+| `wireframes`  | UI sketches for planning/docs            |
+
