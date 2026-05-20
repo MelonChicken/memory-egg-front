@@ -1,4 +1,5 @@
 # Nacimiento - Memory Egg
+> This is the frontend repo.
 
 Nacimiento - Memory Egg is a gamified journaling web application where users take care of a mysterious egg by writing blog posts, completing quests, and earning credits called **Will**.
 
@@ -14,154 +15,95 @@ The egg represents something forgotten and fragile that the user chooses to care
 
 The application encourages users to spend small moments of their busy lives writing, reflecting, and recording memories. Through this habit, the egg gradually changes, symbolizing the user's own process of remembering and taking care of themselves.
 
-## Core Features
+## Frontend repository
 
-### 1. Authentication
+Frontend repository for **Nacimiento - Memory Egg**, a gamified journaling web application where users take care of a mysterious egg by writing notebook posts, completing quests, and earning credits called **Will**.
 
-- Register
-- Login
-- Protected user pages
-- Each user owns their own egg, posts, inventory, and progression data
+This repository contains the React frontend client.  
+The backend REST API is managed in a separate repository.
 
-### 2. Egg Dashboard
+## Related Repositories
 
-After logging in, the user sees their personal egg dashboard.
+- Frontend: `memory-egg-front`
+- Backend: `memory-egg-back` 
 
-The dashboard includes:
+## Frontend Responsibilities
 
-- Current egg stage
-- Will balance
-- Egg stats: Glow, Warmth, and Weight
-- Today’s quests
-- Quick links to write posts, view archive, shop, and inventory
+This repository is responsible for:
 
-### 3. Notebook / Blog Posts
+- Opening story page
+- Register page
+- Login page
+- Egg dashboard
+- Notebook/write post page
+- Memory archive page
+- Quest UI
+- Shop UI
+- Inventory UI
+- Profile/stat page
+- API client functions that communicate with the backend
+- Frontend assets such as egg images, background images, and icons
+- Responsive design
 
-Users can write posts in the notebook.
+## Main Pages
 
-Post features:
+| Page | Purpose |
+|---|---|
+| Opening Story Page | Introduces the abandoned egg |
+| Register Page | User chooses to take care of the egg |
+| Login Page | Returning user comes back to the egg |
+| Egg Dashboard | Main home page after login |
+| Write Post Page | User writes notebook posts |
+| Memory Archive Page | User views past posts |
+| Quest Page | User views daily quests |
+| Shop Page | User spends Will |
+| Inventory Page | User equips purchased items |
+| Profile Page | User views progress statistics |
 
-- Title
-- Content
-- Optional image URL/upload
-- Visibility setting: private, public, or anonymous
-- Word count display
-- Will reward based on writing activity
-
-### 4. Quest / To-Do List
-
-Users receive daily quests from the notebook.
-
-Example quests:
-
-- Write 500+ words today
-- Write about what you studied
-- Write about food
-- Upload a photo memory
-- Return for 3 days in a row
-
-Completing quests rewards Will.
-
-### 5. Egg Stats
-
-The egg has three main stats.
-
-| Stat | Source | Visual / Gameplay Effect |
-|---|---|---|
-| Glow | Study-related posts | Ambient glow around the egg and bonus Will for study quests |
-| Warmth | Applied decoration | Warmer atmosphere and bonus Will for word-count quests |
-| Weight | Food-related posts | Shown as a stat and gives bonus Will for food quests |
-
-### 6. Shop and Inventory
-
-Users can spend Will in the shop.
-
-Shop categories:
-
-- Egg appearance
-- Background themes
-- Music
-- Simple decorations
-
-Purchased items are stored in the user's inventory and can be equipped or unequipped.
-
-### 7. AI/CV Quest Verification
-
-Some quests may use AI/CV verification to classify posts or images.
-
-For example:
-
-- A food-related quest may check whether the post or uploaded image is related to food.
-- A study-related quest may check whether the post content is related to studying.
-
-If verification fails, the post can be classified as `general`.
-
-## Tech Stack
-
-Planned stack:
-
-- Frontend: React
-- Backend: Node.js + Express
-- Database: TBD
-- Authentication: TBD
-- API Documentation: Swagger / OpenAPI
-- Testing: Jest / Supertest
-- CI: GitHub Actions
-
-## Repository Structure
+## Planned Frontend Structure
 
 ```text
-nacimiento-memory-egg/
-  backend/
-    src/
-      controllers/
-      routes/
-      models/
-      services/
-      middleware/
-      validators/
-      tests/
-    package.json
-    .env.example
+src/
+  api/
+    authApi.js
+    eggApi.js
+    postApi.js
+    questApi.js
+    shopApi.js
+    inventoryApi.js
 
-  frontend/
-    src/
-      components/
-      pages/
-      api/
-      hooks/
-      assets/
-    package.json
+  assets/
+    eggs/
+    backgrounds/
+    icons/
+    music/
 
-  docs/
-    proposal/
-    api/
-    wireframes/
+  components/
+    Header.jsx
+    Button.jsx
+    EggView.jsx
+    StatBar.jsx
+    NotebookPanel.jsx
+    QuestCard.jsx
+    ShopItemCard.jsx
+    InventoryItemCard.jsx
+    PostCard.jsx
 
-  .github/
-    workflows/
-      test.yml
+  hooks/
+    useAuth.js
+    useEgg.js
+    usePosts.js
+    useQuests.js
 
-  README.md
-  LICENSE
-  ASSET-LICENSE.md
-  .gitignore
-
-```
-
-| Folder        | Meaning                                  |
-| ------------- | ---------------------------------------- |
-| `controllers` | Handles API request/response             |
-| `routes`      | Defines API URLs                         |
-| `models`      | Database entities/queries                |
-| `services`    | Main business/game logic                 |
-| `middleware`  | Checks before request reaches controller |
-| `validators`  | Validates user input                     |
-| `tests`       | Automated tests                          |
-| `components`  | Reusable frontend UI pieces              |
-| `pages`       | Full frontend screens                    |
-| `api`         | Frontend backend-call functions          |
-| `hooks`       | Reusable React logic                     |
-| `assets`      | Images, icons, music, static files       |
-| `wireframes`  | UI sketches for planning/docs            |
+  pages/
+    OpeningPage.jsx
+    RegisterPage.jsx
+    LoginPage.jsx
+    EggDashboardPage.jsx
+    WritePostPage.jsx
+    MemoryArchivePage.jsx
+    QuestPage.jsx
+    ShopPage.jsx
+    InventoryPage.jsx
+    ProfilePage.jsx
 
