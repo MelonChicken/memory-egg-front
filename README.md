@@ -22,6 +22,27 @@ Frontend repository for **Nacimiento - Memory Egg**, a gamified journaling web a
 This repository contains the React frontend client.  
 The backend REST API is managed in a separate repository.
 
+## Frontend Development Setup
+
+This repository contains the frontend for **Nacimiento - My Egg**, built with React and Vite.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/memory-egg-frontend.git
+cd memory-egg-frontend
+```
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Run the development server
+```bash
+npm run dev
+```
+
+
 ## Related Repositories
 
 - Frontend: `memory-egg-front`
