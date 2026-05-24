@@ -49,38 +49,38 @@ function EggDashboardPage() {
         </section>
 
         <aside className="dashboard-notebook">
-          <div className="bookmark bookmark-green" />
-          <div className="bookmark bookmark-red" />
+          <div
+            className="notebook-shell"
+            style={{ "--notebook-image": `url(${notebookImage})` }}
+          >
+            <h2 className="notebook-title">My Notebook</h2>
 
-          <h2>My Notebook</h2>
+            <section className="notebook-paper-content" aria-label="Today’s quests">
+              <h3>Today’s Quests</h3>
 
-          <section className="quest-paper">
-            <div className="paper-clip" />
+              <ul>
+                <li>
+                  <input type="checkbox" readOnly />
+                  <span>Write 500+ words in total today</span>
+                </li>
+                <li>
+                  <input type="checkbox" readOnly />
+                  <span>Write about what you studied</span>
+                </li>
+                <li>
+                  <input type="checkbox" readOnly />
+                  <span>Upload one photo memory</span>
+                </li>
+              </ul>
+            </section>
 
-            <h3>Today’s Quests</h3>
-
-            <ul>
-              <li>
-                <input type="checkbox" readOnly />
-                <span>Write 500+ words in total today</span>
-              </li>
-              <li>
-                <input type="checkbox" readOnly />
-                <span>Write about what you studied</span>
-              </li>
-              <li>
-                <input type="checkbox" readOnly />
-                <span>Upload one photo memory</span>
-              </li>
-            </ul>
-          </section>
-
-          <nav className="dashboard-actions" aria-label="Dashboard actions">
-            <a href="/write">Write Post</a>
-            <a href="/shop">Shop</a>
-            <a href="/archive">Archive</a>
-            <a href="/inventory">Inventory</a>
-          </nav>
+            <nav className="dashboard-actions" aria-label="Dashboard actions">
+              <a href="/write">Write Post</a>
+              <a href="/shop">Shop</a>
+              <a href="/archive">Archive</a>
+              <a href="/inventory">Inventory</a>
+            </nav>
+          </div>
         </aside>
       </section>
     </main>
