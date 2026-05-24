@@ -4,6 +4,7 @@ import eggImage from "../assets/egg.PNG";
 import nestImage from "../assets/nest.PNG";
 import notebookImage from "../assets/notebook.PNG";
 import windowFrameImage from "../assets/windowframe.PNG";
+import windowBackgroundImage from "../assets/background.png";
 
 function EggDashboardPage() {
   return (
@@ -22,8 +23,18 @@ function EggDashboardPage() {
 
       <section className="dashboard-content">
         <section className="window-area" aria-label="Egg window scene placeholder">
-          <div className="window-frame" style={{ "--window-frame-image": `url(${windowFrameImage})` }}>
-            <div className="window-view">
+          <div
+            className="window-frame"
+            style={{ "--window-frame-image": `url(${windowFrameImage})` }}
+          >
+            <div
+              className="window-view"
+              style={{ "--window-background-image": `url(${windowBackgroundImage})` }}
+            >
+              <div className="window-sill" />
+            </div>
+
+            <div className="scene-layer">
               <div className="scene-group">
                 <div className="scene-art scene-nest">
                   <img src={nestImage} alt="Nest" />
@@ -33,8 +44,6 @@ function EggDashboardPage() {
                   <img src={eggImage} alt="Egg" />
                 </div>
               </div>
-
-              <div className="window-sill" />
             </div>
           </div>
         </section>

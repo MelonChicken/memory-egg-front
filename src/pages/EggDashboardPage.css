@@ -141,6 +141,8 @@
   background-color: #d9d9d9;
   overflow: visible;
   container-type: inline-size;
+
+  --sill-height: 22px;
 }
 
 .window-frame::after {
@@ -153,7 +155,7 @@
   background-position: center;
   background-repeat: no-repeat;
 
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
 }
 
@@ -161,12 +163,24 @@
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  overflow: hidden;
   background: transparent;
+  z-index: 1;
+}
 
-  --sill-height: 22px;
+.window-view::before {
+  content: "";
+  position: absolute;
+  inset: 0;
 
-  z-index: 5;
+  background-color: #bfd0df;
+  background-image: var(--window-background-image, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  z-index: 0;
+  pointer-events: none;
 }
 
 .window-sill {
@@ -182,6 +196,14 @@
 }
 
 /* Asset application */
+
+.scene-layer {
+  position: absolute;
+  inset: 1.55rem;
+  overflow: visible;
+  z-index: 5;
+  pointer-events: none;
+}
 
 .scene-group {
   position: absolute;
@@ -551,10 +573,11 @@
     width: 100%;
     aspect-ratio: 1.15 / 1;
     padding: 0.9rem;
+    --sill-height: clamp(14px, 4%, 22px);
   }
 
-  .window-view {
-    --sill-height: clamp(14px, 4%, 22px);
+  .scene-layer {
+    inset: 0.9rem;
   }
 
   .scene-group {
