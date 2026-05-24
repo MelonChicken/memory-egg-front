@@ -109,7 +109,7 @@
   min-height: calc(100vh - 58px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) 430px;
-  column-gap: 2.6rem;
+  column-gap: 2.8rem;
   align-items: start;
   padding: 2.6rem 2rem 0 2rem;
 }
@@ -133,8 +133,8 @@
 
 .window-frame {
   width: 100%;
-  max-width: 1160px;
-  aspect-ratio: 1.52 / 1;
+  max-width: 1320px;
+  aspect-ratio: 1.55 / 1;
   padding: 1.55rem;
   background: #d9d9d9;
 }
@@ -171,17 +171,17 @@
 }
 
 .scene-egg {
-  right: 16%;
-  bottom: 18%;
+  right: 14%;
+  bottom: 17%;
   width: 130px;
   height: 165px;
   z-index: 2;
 }
 
 .scene-nest {
-  right: 9%;
-  bottom: 6%;
-  width: 265px;
+  right: 7%;
+  bottom: 5.5%;
+  width: 270px;
   height: 90px;
   z-index: 1;
 }
@@ -341,6 +341,25 @@
 }
 
 /* Responsive */
+/*Window can grow up more in bigger size of screen. notebook also becomes slightly bigger.*/
+@media (min-width: 1700px) {
+  .dashboard-content {
+    grid-template-columns: minmax(0, 1fr) 440px;
+    column-gap: 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .window-frame {
+    max-width: 1450px;
+    aspect-ratio: 1.6 / 1;
+  }
+
+  .dashboard-notebook {
+    width: 440px;
+    min-height: 580px;
+  }
+}
 
 @media (max-height: 760px) and (min-width: 681px) {
   .dashboard-content {
