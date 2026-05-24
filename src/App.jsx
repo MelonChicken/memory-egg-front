@@ -5,9 +5,10 @@
 
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 
 function App() {
-  return <RegisterPage />;
+  return <LoginPage />;
   /*
   return ( 
     <main className="app-page"> 
