@@ -4,9 +4,10 @@
 // <h1 /> tests title style
 
 import OpeningPage from "./pages/OpeningPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
 
 function App() {
-  return <OpeningPage />;
+  return <RegisterPage />;
   /*
   return ( 
     <main className="app-page"> 
