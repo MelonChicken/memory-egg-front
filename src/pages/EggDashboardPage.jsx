@@ -22,7 +22,7 @@ function EggDashboardPage() {
 
       <section className="dashboard-content">
         <section className="window-area" aria-label="Egg window scene placeholder">
-          <div className="window-frame">
+          <div className="window-frame" style={{ "--window-frame-image": `url(${windowFrameImage})` }}>
             <div className="window-view">
               <div className="scene-group">
                 <div className="scene-art scene-nest">
