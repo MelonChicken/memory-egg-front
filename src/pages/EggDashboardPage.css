@@ -134,16 +134,19 @@
 .window-frame {
   width: 100%;
   max-width: 1320px;
-  aspect-ratio: 1.55 / 1;
+  aspect-ratio: 1.85 / 1;
   padding: 1.55rem;
   background: #d9d9d9;
+  overflow: visible;
+
+  container-type: inline-size;
 }
 
 .window-view {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
   background: #bfd0df;
 
   --sill-height: 22px;
@@ -163,12 +166,19 @@
 
 .scene-group {
   position: absolute;
-  right: -40% !important;
-  bottom: calc(var(--sill-height) - 120px);
+  right: 0;
+  bottom: calc(var(--sill-height) - var(--scene-drop, 174px));
   width: 620px;
   height: 360px;
   z-index: 5;
   overflow: visible;
+
+  --scene-scale: 1;
+  --scene-out: 78%;
+  --scene-drop: 174px;
+
+  transform: translateX(var(--scene-out)) scale(var(--scene-scale));
+  transform-origin: bottom right;
 }
 
 .scene-art {
@@ -195,7 +205,7 @@
 }
 
 .scene-nest img {
-  transform: scale(2.5);
+  transform: scale(3.5);
   transform-origin: bottom right;
 }
 
@@ -205,8 +215,8 @@
 }
 
 .scene-egg {
-  right: 575px !important;
-  bottom: 50px !important;
+  right: 480px;
+  bottom: 50px;
   width: 180px;
   height: 225px;
   z-index: 6;
@@ -379,73 +389,55 @@
 
   .window-frame {
     max-width: 1450px;
-    aspect-ratio: 1.6 / 1;
+    aspect-ratio: 1.9 / 1;
   }
 
   .dashboard-notebook {
     width: 440px;
     min-height: 580px;
   }
-
-  .scene-group {
-    right: 0.6%;
-    width: 620px;
-    height: 360px;
-  }
-
-  .scene-nest {
-    width: 575px;
-    height: 252px;
-  }
-
-  .scene-egg {
-    right: 132px;
-    bottom: 16px;
-    width: 176px;
-    height: 220px;
-  }
 }
 
-@media (max-height: 760px) and (min-width: 681px) {
+
+/* Medium desktop / edge desktop range */
+@media (min-width: 1051px) and (max-width: 1699px) {
   .dashboard-content {
-    grid-template-columns: minmax(0, 1fr) 410px;
-    column-gap: 2.4rem;
-    padding: 2rem 2rem 0 2rem;
+    grid-template-columns: minmax(0, 1fr) 430px;
+    column-gap: 2.6rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .window-frame {
-    max-width: 980px;
-    aspect-ratio: 1.32 / 1;
-  }
-
-  .dashboard-notebook {
-    width: 410px;
-    min-height: 500px;
-    align-self: end;
-  }
-
-  .quest-paper {
-    min-height: 235px;
-  }
-
-  .scene-group {
-    right: 1.2%;
-    width: 430px;
-    height: 255px;
-  }
-
-  .scene-nest {
-    width: 395px;
-    height: 173px;
-  }
-
-  .scene-egg {
-    right: 92px;
-    bottom: 14px;
-    width: 132px;
-    height: 165px;
+    max-width: 1180px;
+    aspect-ratio: 1.75 / 1;
   }
 }
+
+@media (min-width: 1051px) and (max-width: 1240px) {
+  .scene-group {
+    --scene-scale: 0.50;
+    --scene-out: 38%;
+    --scene-drop: 82px;
+  }
+}
+
+@media (min-width: 1241px) and (max-width: 1440px) {
+  .scene-group {
+    --scene-scale: 0.58;
+    --scene-out: 44%;
+    --scene-drop: 96px;
+  }
+}
+
+@media (min-width: 1441px) and (max-width: 1699px) {
+  .scene-group {
+    --scene-scale: 0.78;
+    --scene-out: 60%;
+    --scene-drop: 118px;
+  }
+}
+
 
 @media (max-width: 1050px) {
   .dashboard-content {
@@ -477,25 +469,49 @@
   .bookmark {
     display: none;
   }
-
+  /*
   .scene-group {
-    right: 1.8%;
-    width: 390px;
-    height: 230px;
+    --scene-scale: 0.56;
+    right: -30%;
+    bottom: calc(var(--sill-height) - 80px);
   }
-
-  .scene-nest {
-    width: 360px;
-    height: 158px;
-  }
-
-  .scene-egg {
-    right: 84px;
-    bottom: 14px;
-    width: 122px;
-    height: 152px;
+  */
+  .scene-group {
+    --scene-scale: 0.84;
+    --scene-out: 60%;
+    --scene-drop: 110px;
   }
 }
+
+@media (max-height: 760px) and (min-width: 1051px) {
+  .dashboard-content {
+    grid-template-columns: minmax(0, 1fr) 410px;
+    column-gap: 2.4rem;
+    padding: 2rem 2rem 0 2rem;
+  }
+
+  .window-frame {
+    max-width: 980px;
+    aspect-ratio: 1.32 / 1;
+  }
+
+  .dashboard-notebook {
+    width: 410px;
+    min-height: 500px;
+    align-self: end;
+  }
+
+  .quest-paper {
+    min-height: 235px;
+  }
+
+  .scene-group {
+    --scene-scale: 0.56;
+    --scene-out: 42%;
+    --scene-drop: 92px;
+  }
+}
+
 
 @media (max-width: 680px) {
   .dashboard-header {
@@ -523,21 +539,9 @@
   }
 
   .scene-group {
-    right: 2.5%;
-    width: 270px;
-    height: 160px;
-  }
-
-  .scene-nest {
-    width: 248px;
-    height: 109px;
-  }
-
-  .scene-egg {
-    right: 58px;
-    bottom: 10px;
-    width: 84px;
-    height: 105px;
+    --scene-scale: 0.48;
+    --scene-out: 35%;
+    --scene-drop: 72px;
   }
 
   .dashboard-notebook {
