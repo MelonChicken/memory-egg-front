@@ -6,9 +6,10 @@
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import ViewPostPage from "./pages/ViewPostPage.jsx";
 
 function App() {
-  return <LoginPage />;
+  return <ViewPostPage />;
   /*
   return ( 
     <main className="app-page"> 
