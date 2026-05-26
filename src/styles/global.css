@@ -145,6 +145,45 @@ a { /* Remove default link style. */
   background: var(--color-bg-soft);
 }
 
+/* Forms */
+
+.form-field { /* Wrapper for form input and label */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text-soft);
+  letter-spacing: 0.04em;
+  text-transform: uppercase; 
+}
+
+.form-input,
+.form-textarea,
+.form-select { /* Shared style for input, textarea, select */
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper);
+  color: var(--color-text);
+  padding: 0.75rem 0.9rem;
+}
+
+.form-textarea { /* start tall enough for writing. user may resize up and down but not sideways */
+  min-height: 220px;
+  resize: vertical;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus { /* User clicks into a field -> visible focus style*/
+  outline: 2px solid rgba(122, 93, 72, 0.25);
+  border-color: var(--color-text-soft);
+}
+
 
 /* Utility Classes */
 
