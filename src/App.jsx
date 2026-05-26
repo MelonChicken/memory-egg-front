@@ -6,9 +6,10 @@
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-
+import MemoryArchivePage from "./pages/MemoryArchivePage.jsx"
+;
 function App() {
-  return <LoginPage />;
+  return <MemoryArchivePage />;
   /*
   return ( 
     <main className="app-page"> 
