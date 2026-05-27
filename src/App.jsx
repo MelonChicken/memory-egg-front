@@ -7,9 +7,10 @@ import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import EggDashboardPage from "./pages/EggDashboardPage.jsx";
+import InventoryPage from "./pages/InventoryPage.jsx";
 
 function App() {
-  return <EggDashboardPage />;
+  return <InventoryPage />;
   /*
   return ( 
     <main className="app-page"> 
