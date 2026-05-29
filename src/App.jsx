@@ -6,11 +6,17 @@
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import ViewPostPage from "./pages/ViewPostPage.jsx";
+import WritePostPage from "./pages/WritePostPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 import EggDashboardPage from "./pages/EggDashboardPage.jsx";
 import InventoryPage from "./pages/InventoryPage.jsx";
+import ShopPage from "./pages/ShopPage.jsx";
+import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
 function App() {
   return <InventoryPage />;
+
   /*
   return ( 
     <main className="app-page"> 
