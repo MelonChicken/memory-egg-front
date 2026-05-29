@@ -226,7 +226,7 @@ function MemoryArchivePage() {
           </div>
 
           <div className="preview-actions">
-            <a href={`/archive/${selectedPost.post_id}`}>⌕ View</a>
+            <a href={`/posts/${selectedPost.post_id}`}>⌕ View</a>
             <button type="button" aria-label="Delete post">
               ⌫
             </button>
