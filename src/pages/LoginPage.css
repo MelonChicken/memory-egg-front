@@ -40,7 +40,7 @@
 }
 
 .login-title {
-  margin: 0 0 0.6rem;
+  margin: 0 0 2.2rem;
   font-family: var(--font-serif);
   font-size: 2.65rem;
   line-height: 1;
@@ -48,7 +48,7 @@
 }
 
 .login-subtitle {
-  margin: 0 0 2.2rem;
+  margin: 0.2rem 0 0;
   max-width: 320px;
   color: #211914;
   font-size: 0.98rem;
@@ -98,7 +98,7 @@
 .login-submit {
   width: 100%;
   min-height: 52px;
-  margin-top: 1.5rem;
+  margin-top: 0.2rem;
   border: none;
   border-radius: 999px;
   background: #735c51;
@@ -126,7 +126,7 @@
   font-weight: 700;
 }
 
-/* Tablet / mobile */
+/* Responsive */
 @media (max-width: 860px) {
   .login-page {
     grid-template-columns: 1fr;

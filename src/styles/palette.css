@@ -1,0 +1,50 @@
+/*Accountable for global css variables across pages.*/
+
+:root {
+  /* Colors */
+  --color-bg: #efe8dc;
+  --color-bg-soft: #f7f3eb;
+
+  --color-panel: #c2a383;
+  --color-panel-light: #d8c2a8;
+  --color-paper: #f8f4ec;
+
+  --color-text: #2f241f;
+  --color-text-soft: #6f5a4d;
+  --color-text-muted: #9a8678;
+
+  --color-border: #d6c9bb;
+
+  --color-button: #2b1d17;
+  --color-button-hover: #3a2921;
+  --color-button-text: #fffaf2;
+
+  --color-danger: #8b3a2f;
+  --color-success: #4f7d4f;
+
+  /* Typography */
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: Inter, Arial, Helvetica, sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.4rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Shadow */
+  --shadow-soft: 0 14px 35px rgba(51, 36, 28, 0.12);
+  --shadow-panel: 0 18px 45px rgba(51, 36, 28, 0.16);
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --header-height: 72px;
+}
