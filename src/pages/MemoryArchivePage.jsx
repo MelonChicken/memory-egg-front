@@ -8,9 +8,9 @@ const archivePosts = [
     user_id: 1,
     title: "Nov 2",
     content:
-      "A quiet note from early November. I wrote about how small routines can make the egg feel warmer.",
+      "I'm studying Web Programming. This is so fun as I could create my imagination into something real.",
     image_url: null,
-    tag: "reflection",
+    tag: "study",
     visibility: "private",
     word_count: 128,
     will_reward: 12,
@@ -20,12 +20,12 @@ const archivePosts = [
   {
     post_id: 2,
     user_id: 1,
-    title: "The Storm",
+    title: "The Storm of chips",
     content:
-      "The rain sounded louder than usual today. I kept thinking about how fear arrives suddenly, but also leaves in fragments.",
+      "I love potato chips. A bottle of Coca-cola goes well with this ngl.",
     image_url:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80",
-    tag: "weather",
+    tag: "food",
     visibility: "public",
     word_count: 286,
     will_reward: 18,
@@ -326,6 +326,7 @@ function createPreviewText(content, maxLength = 150) {
   return content.slice(0, maxLength).trim() + "...";
 }
 */ 
+/*
 function createPreviewText(content, maxLength = 150) {
   if (!content) {
     return "No preview available.";
@@ -343,6 +344,44 @@ function createPreviewText(content, maxLength = 150) {
   }
 
   return shortened.slice(0, lastSpaceIndex).trim() + "...";
+} */
+function createPreviewText(content, maxLength = 150) {
+  if (!content) {
+    return "No preview available.";
+  }
+
+  if (content.length <= maxLength) {
+    return content;
+  }
+
+  const shortened = content.slice(0, maxLength);
+  const lastSpaceIndex = shortened.lastIndexOf(" ");
+
+  if (lastSpaceIndex === -1) {
+    return shortened + "...";
+  }
+
+  return shortened.slice(0, lastSpaceIndex).trim() + "...";
+}
+
+/* More universal
+function getTagClassName(tag) {
+  return `tag-${tag || "general"}`;
+}
+*/
+/*But for now we just using two tags mainly. */
+function getTagClassName(tag) {
+  const normalizedTag = tag?.toLowerCase();
+
+  if (normalizedTag === "study") {
+    return "tag-study";
+  }
+
+  if (normalizedTag === "food") {
+    return "tag-food";
+  }
+
+  return "tag-general";
 }
 
 
@@ -402,8 +441,7 @@ function MemoryArchivePage() {
                   selectedPost.post_id === post.post_id ? "selected" : ""
                 }`}
                 type="button"
-                onMouseEnter={() => setSelectedPost(post)}
-                onFocus={() => setSelectedPost(post)}
+                onClick={() => setSelectedPost(post)}
               >
                 <div className="archive-post-image">
                   {post.image_url ? (
@@ -414,23 +452,25 @@ function MemoryArchivePage() {
                 </div>
 
                 <strong>{post.title}</strong>
+                <span className={`archive-card-tag ${getTagClassName(post.tag)}`}>
+                  {post.tag}
+                </span>
               </button>
             ))}
           </div>
         </section>
 
         <aside className="archive-preview-panel" aria-label="Selected post preview">
-          <button className="preview-close-button" type="button" aria-label="Close preview">
-            ×
-          </button>
 
           <span className="preview-label">Selected Object</span>
 
           <h2>{selectedPost.title}</h2>
 
           <div className="preview-tags">
-            <span>{selectedPost.tag}</span>
-            <span>will +{selectedPost.will_reward}</span>
+            <span className={getTagClassName(selectedPost.tag)}>
+              {selectedPost.tag}
+            </span>
+            <span className="tag-will">will +{selectedPost.will_reward}</span>
           </div>
 
           <p className="preview-excerpt">
