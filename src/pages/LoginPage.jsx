@@ -16,10 +16,6 @@ function LoginPage() {
           Nacimiento
         </h1>
 
-        <p className="login-subtitle">
-          “Write your memories. Care for your egg. Your forgotten self is waiting.”
-        </p>
-
         <form className="login-form">
           <label className="login-field">
             <span>ID</span>
@@ -30,6 +26,11 @@ function LoginPage() {
             <span>Secret Password</span>
             <input type="password" name="password" placeholder="••••••••" />
           </label>
+
+          <p className="login-subtitle">
+            “Write your memories. Care for your egg. Your forgotten self is
+            waiting.”
+          </p>
 
           <button className="login-submit" type="button">
             Sign In

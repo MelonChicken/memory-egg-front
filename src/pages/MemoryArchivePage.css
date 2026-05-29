@@ -1,0 +1,615 @@
+/*
+.memory-archive-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+*/
+
+.memory-archive-page {
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+
+  --archive-header-height: 42px;
+}
+
+/* Header */
+
+.archive-header {
+  height: 42px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  background: var(--color-bg-soft);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.archive-brand {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: #4d342c;
+}
+
+.archive-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.archive-nav a {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: #ded8cc;
+  color: #5b4b41;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.archive-user {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.archive-user-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.05;
+}
+
+.archive-user-text span {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #5f473d;
+}
+
+.archive-user-text strong {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: #3c2a24;
+}
+
+.archive-avatar {
+  width: 32px;
+  height: 32px;
+  border: 1.3px solid #7b6658;
+  border-radius: 50%;
+  position: relative;
+}
+
+.archive-avatar::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border: 1.3px solid #7b6658;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.archive-avatar::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 18px;
+  height: 10px;
+  border: 1.3px solid #7b6658;
+  border-bottom: none;
+  border-radius: 999px 999px 0 0;
+  transform: translateX(-50%);
+}
+
+/* Layout */
+
+.archive-layout {
+  width: min(100% - 4rem, 1160px);
+  height: calc(100dvh - var(--archive-header-height));
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) 280px;
+  gap: 1.8rem;
+
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+  overflow: hidden;
+}
+
+/* Sidebar */
+
+.archive-sidebar {
+  padding-top: 1rem;
+}
+
+.archive-title-block h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.05;
+  color: #6c5147;
+}
+
+.archive-title-block p {
+  margin: 0.6rem 0 2rem;
+  color: #6d5c53;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.archive-shelf-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.archive-shelf-nav a {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.2rem;
+  border-radius: 6px;
+  background: #7a5f54;
+  color: #fff8ef;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.archive-progress-card {
+  margin-top: 3.5rem;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #fffdf8;
+  box-shadow: 0 12px 26px rgba(72, 52, 38, 0.05);
+}
+
+.archive-progress-icon {
+  color: #9e7468;
+  font-size: 1.6rem;
+}
+
+.archive-progress-card h2 {
+  margin: 0.4rem 0 0.35rem;
+  color: #5c4c43;
+  font-size: 0.85rem;
+}
+
+.archive-progress-card p {
+  margin: 0;
+  color: #786a61;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Main panel */
+
+.archive-main-panel {
+  min-height: 0;
+  height: 100%;
+
+  padding: 4.2rem 2.4rem;
+  border-radius: 28px;
+  background: rgba(255, 253, 248, 0.6);
+  box-shadow: 0 24px 48px rgba(70, 51, 38, 0.12);
+
+  overflow: hidden;
+}
+
+.archive-post-grid {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(95px, 1fr));
+  align-content: start;
+  gap: 1rem;
+
+  padding-right: 0.35rem;
+}
+
+.archive-post-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.archive-post-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.archive-post-grid::-webkit-scrollbar-thumb {
+  background: #d1c5b7;
+  border-radius: 999px;
+}
+
+.archive-post-card {
+  border: none;
+  background: transparent;
+  color: #2d221d;
+  text-align: center;
+  cursor: pointer;
+}
+
+.archive-post-card:focus-visible {
+  outline: 2px solid #8a6f61;
+  outline-offset: 4px;
+}
+
+.archive-post-image {
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.8rem;
+  border-radius: 2px;
+  border: 1px solid #eee2d6;
+  background: #fffdf8;
+  overflow: hidden;
+  box-shadow: 0 10px 18px rgba(71, 51, 38, 0.08);
+}
+
+.archive-post-card:hover .archive-post-image {
+  border-color: #c9b7a6;
+  box-shadow: 0 12px 22px rgba(71, 51, 38, 0.12);
+}
+
+.archive-post-card.selected .archive-post-image {
+  border-color: #9bbf94;
+  box-shadow: 0 12px 22px rgba(83, 102, 73, 0.16);
+}
+
+.archive-post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.archive-post-image span {
+  color: #8a8077;
+  font-size: 1.4rem;
+}
+
+.archive-post-card strong {
+  display: block;
+  color: #2f241f;
+  font-size: 0.78rem;
+}
+
+.archive-card-tag {
+  width: fit-content;
+  min-height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.35rem auto 0;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Preview panel */
+
+.archive-preview-panel {
+  position: relative;
+  min-height: 415px;
+  padding: 2rem 1.8rem;
+  background: #fffdf8;
+  box-shadow: 0 16px 32px rgba(70, 51, 38, 0.12);
+}
+
+/*Not used anymore
+.preview-close-button {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.5rem;
+  border: none;
+  background: transparent;
+  color: #7a6d64;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+*/
+
+.preview-label {
+  display: block;
+  margin-bottom: 1.8rem;
+  color: #8b7d73;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.archive-preview-panel h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  color: #2d211c;
+}
+
+.preview-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.6rem 0 1.6rem;
+}
+
+.preview-tags span {
+  min-height: 19px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: #e5dccf;
+  color: #5f5148;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* All green tag
+.preview-tags span:first-child {
+  background: #dcefd0;
+  color: #3e6a34;
+}*/
+
+.preview-tags .tag-general,
+.archive-card-tag.tag-general {
+  background: #dcefd0;
+  color: #3e6a34;
+}
+
+.preview-tags .tag-study,
+.archive-card-tag.tag-study {
+  background: #d9e5f7;
+  color: #334f7f;
+}
+
+.preview-tags .tag-food,
+.archive-card-tag.tag-food {
+  background: #f3dfc6;
+  color: #7d4f2b;
+}
+
+.preview-tags .tag-will {
+  background: #f2e6cd;
+  color: #7a5a2f;
+}
+
+.preview-excerpt {
+  min-height: 130px;
+  margin: 0;
+  color: #504238;
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.65;
+}
+
+.preview-divider {
+  height: 1px;
+  margin: 1.5rem 0;
+  background: linear-gradient(to right, #e4d8cb 60%, transparent);
+}
+
+/* Split text issue
+.preview-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #82756b;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+*/
+
+.preview-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  color: #82756b;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.preview-meta span {
+  white-space: nowrap;
+}
+
+.preview-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.preview-actions a,
+.preview-actions button {
+  min-height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: #eee8df;
+  color: #4b3d35;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.preview-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-actions button {
+  width: 34px;
+}
+
+/* Responsive */
+
+@media (max-width: 980px) {
+  .memory-archive-page {
+    overflow: hidden;
+  }
+
+  .archive-layout {
+    width: min(100% - 2rem, 680px);
+    height: calc(100dvh - var(--archive-header-height));
+
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 1rem;
+
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    overflow: hidden;
+  }
+
+  .archive-sidebar {
+    padding-top: 0;
+  }
+
+  .archive-title-block {
+    display: none;
+  }
+
+  .archive-progress-card {
+    display: none;
+  }
+
+  .archive-main-panel {
+    min-height: 0;
+    height: 100%;
+    padding: 1.4rem;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .archive-post-grid {
+    height: 100%;
+    overflow-y: auto;
+    grid-template-columns: repeat(2, 1fr);
+    align-content: start;
+  }
+  /* I can't see the view post button with this.
+  .archive-preview-panel {
+    min-height: auto;
+    max-height: 230px;
+    overflow: hidden;
+  } */
+
+  .archive-preview-panel {
+    min-height: 310px;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  /*Polished tablet media*/
+  .preview-label {
+    margin-bottom: 0.8rem;
+  }
+
+  .archive-preview-panel h2 {
+    font-size: 1.25rem;
+  }
+
+  .preview-tags {
+    margin: 0.45rem 0 0.9rem;
+  }
+
+  .preview-excerpt {
+    min-height: auto;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .preview-divider {
+    margin: 0.9rem 0;
+  }
+
+  .preview-actions {
+    margin-top: 0.9rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .memory-archive-page {
+    --archive-header-height: 84px;
+  }
+
+  .archive-header {
+    grid-template-columns: auto auto;
+    height: auto;
+    min-height: var(--archive-header-height);
+    padding: 0.7rem 1rem;
+  }
+
+  .archive-nav {
+    order: 3;
+    grid-column: 1 / -1;
+  }
+
+  .archive-user {
+    justify-self: end;
+  }
+
+  .archive-layout {
+    height: calc(100dvh - var(--archive-header-height));
+    width: min(100% - 1.2rem, 520px);
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .archive-main-panel {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .archive-post-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+  }
+
+  /* I can't see view post button
+  .archive-preview-panel {
+    padding: 1.2rem;
+    max-height: 220px;
+  } */
+  .archive-preview-panel {
+    min-height: 300px;
+    max-height: none;
+    padding: 1.2rem;
+    overflow: hidden;
+  }
+}
