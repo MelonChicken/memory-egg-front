@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getPostById } from "../api/postsApi";
+import { useNavigate, useParams } from "react-router-dom";
+import { deletePost, getPostById } from "../api/postsApi";
 import "./ViewPostPage.css";
 
 function ViewPostPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +35,25 @@ function ViewPostPage() {
         <a href="/archive">← Back to Archive</a>
       </main>
     );
+  }
+
+  async function handleDelete() {
+    console.log("Delete button clicked");
+    console.log("Current post:", post);
+
+    const confirmed = window.confirm("Delete this memory?");
+
+    console.log("Confirmed:", confirmed);
+
+    if (!confirmed) {
+      return;
+    }
+
+    await deletePost(post.post_id);
+
+    console.log("Deleted post id:", post.post_id);
+
+    navigate("/archive");
   }
 
   return (
@@ -81,7 +101,11 @@ function ViewPostPage() {
         </article>
 
         <div className="post-detail-actions">
-          <button className="delete-post-button" type="button">
+          <button
+            className="delete-post-button"
+            type="button"
+            onClick={handleDelete}
+          >
             ⌫ Delete Post
           </button>
         </div>

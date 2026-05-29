@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllPosts } from "../api/postsApi";
+import { deletePost, getAllPosts } from "../api/postsApi";
 import "./MemoryArchivePage.css";
 
 
@@ -105,6 +105,23 @@ function MemoryArchivePage() {
 
     loadArchivePosts();
   }, []);
+
+  async function handleDeleteSelectedPost() {
+    const confirmed = window.confirm("Delete this memory?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    await deletePost(selectedPost.post_id);
+
+    const updatedPosts = archivePosts.filter(
+      (post) => Number(post.post_id) !== Number(selectedPost.post_id)
+    );
+
+    setArchivePosts(updatedPosts);
+    setSelectedPost(updatedPosts[0] || null);
+  }
 
   if (loading) {
     return (
@@ -227,7 +244,11 @@ function MemoryArchivePage() {
 
           <div className="preview-actions">
             <a href={`/posts/${selectedPost.post_id}`}>⌕ View</a>
-            <button type="button" aria-label="Delete post">
+            <button
+              type="button"
+              aria-label="Delete post"
+              onClick={handleDeleteSelectedPost}
+            >
               ⌫
             </button>
           </div>

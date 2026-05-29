@@ -100,3 +100,20 @@ export async function createPost(postData) {
 
   return newPost;
 }
+
+export async function deletePost(postId) {
+  const posts = loadPostsFromStorage();
+
+  console.log("Before delete:", posts);
+  console.log("Trying to delete postId:", postId);
+
+  const updatedPosts = posts.filter(
+    (post) => Number(post.post_id) !== Number(postId)
+  );
+
+  console.log("After delete:", updatedPosts);
+
+  savePostsToStorage(updatedPosts);
+
+  return true;
+}
