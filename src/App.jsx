@@ -15,7 +15,7 @@ import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
 function App() {
-  return <InventoryPage />;
+  return <WritePostPage />;
 
   /*
   return ( 
