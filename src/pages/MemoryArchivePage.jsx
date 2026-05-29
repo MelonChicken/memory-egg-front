@@ -181,6 +181,10 @@ function MemoryArchivePage() {
             <a className="active" href="/archive">
               ▧ Main Shelf
             </a>
+
+            <a className="archive-write-link" href="/write">
+              ✎ Write Post
+            </a>
           </nav>
 
           <section className="archive-progress-card">

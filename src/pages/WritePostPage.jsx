@@ -34,7 +34,7 @@ function WritePostPage() {
     });
 
     console.log("Created post:", newPost);
-    alert("Post created!");
+    alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 
   }
 
