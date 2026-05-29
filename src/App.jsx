@@ -6,12 +6,13 @@
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import WritePostPage from "./pages/WritePostPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import EggDashboardPage from "./pages/EggDashboardPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
 function App() {
-  return <ProfilePage />;
+  return <WritePostPage />;
 
   /*
   return ( 
