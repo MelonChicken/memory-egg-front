@@ -237,13 +237,6 @@
   font-size: 0.8rem;
 }
 
-.write-body-label span {
-  display: block;
-  margin-bottom: 0.35rem;
-  color: #beb6ac;
-  font-size: 0.8rem;
-}
-
 .write-body-input {
   width: 100%;
   min-height: 250px;

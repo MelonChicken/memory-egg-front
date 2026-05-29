@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { deletePost, getAllPosts } from "../api/postsApi";
+import { useState } from "react";
+import { usePosts } from "../hooks/usePosts";
 import "./MemoryArchivePage.css";
 
 
@@ -90,37 +90,25 @@ function getTagClassName(tag) {
 
 
 function MemoryArchivePage() {
-  const [archivePosts, setArchivePosts] = useState([]);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { posts: archivePosts, loading, removePost } = usePosts();
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
-  useEffect(() => {
-    async function loadArchivePosts() {
-      const posts = await getAllPosts();
-
-      setArchivePosts(posts);
-      setSelectedPost(posts[0] || null);
-      setLoading(false);
-    }
-
-    loadArchivePosts();
-  }, []);
+  const selectedPost =
+    archivePosts.find(
+      (post) => Number(post.post_id) === Number(selectedPostId)
+    ) ||
+    archivePosts[0] ||
+    null;
 
   async function handleDeleteSelectedPost() {
     const confirmed = window.confirm("Delete this memory?");
 
-    if (!confirmed) {
+    if (!confirmed || !selectedPost) {
       return;
     }
 
-    await deletePost(selectedPost.post_id);
-
-    const updatedPosts = archivePosts.filter(
-      (post) => Number(post.post_id) !== Number(selectedPost.post_id)
-    );
-
-    setArchivePosts(updatedPosts);
-    setSelectedPost(updatedPosts[0] || null);
+    await removePost(selectedPost.post_id);
+    setSelectedPostId(null);
   }
 
   if (loading) {
@@ -200,10 +188,10 @@ function MemoryArchivePage() {
               <button
                 key={post.post_id}
                 className={`archive-post-card ${
-                  selectedPost.post_id === post.post_id ? "selected" : ""
+                  Number(selectedPost?.post_id) === Number(post.post_id) ? "selected" : ""
                 }`}
                 type="button"
-                onClick={() => setSelectedPost(post)}
+                onClick={() => setSelectedPostId(post.post_id)}
               >
                 <div className="archive-post-image">
                   {post.image_url ? (

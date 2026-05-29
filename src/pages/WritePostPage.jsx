@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../api/postsApi";
+/* import { createPost } from "../api/postsApi"; */
+import { usePosts } from "../hooks/usePosts";
 import "./WritePostPage.css";
 
 function WritePostPage() {
+  const { addPost } = usePosts();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("reflection");
-  const [imageUrl, setImageUrl] = useState("");
+  /*const [imageUrl, setImageUrl] = useState("");*/
   const [visibility, setVisibility] = useState("private");
 
   const navigate = useNavigate();
@@ -25,15 +27,14 @@ function WritePostPage() {
       return;
     }
 
-    const newPost = await createPost({
+    await addPost({
       title,
       content,
       tag,
-      image_url: imageUrl || null,
+      image_url: null,
       visibility,
     });
 
-    console.log("Created post:", newPost);
     alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 
   }

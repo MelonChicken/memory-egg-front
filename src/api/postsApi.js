@@ -42,7 +42,14 @@ function loadPostsFromStorage() {
     return defaultPosts;
   }
 
-  return JSON.parse(savedPosts);
+  const parsedPosts = JSON.parse(savedPosts);
+
+  if (!Array.isArray(parsedPosts)) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultPosts));
+    return defaultPosts;
+  }
+
+  return parsedPosts;
 }
 
 function savePostsToStorage(posts) {

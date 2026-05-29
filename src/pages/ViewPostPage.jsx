@@ -38,21 +38,22 @@ function ViewPostPage() {
   }
 
   async function handleDelete() {
+    /*
     console.log("Delete button clicked");
     console.log("Current post:", post);
-
+    */
     const confirmed = window.confirm("Delete this memory?");
-
+    /*
     console.log("Confirmed:", confirmed);
-
+    */
     if (!confirmed) {
       return;
     }
 
     await deletePost(post.post_id);
-
+    /*
     console.log("Deleted post id:", post.post_id);
-
+    */
     navigate("/archive");
   }
 
