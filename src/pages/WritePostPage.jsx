@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createPost } from "../api/postsApi";
 import "./WritePostPage.css";
 
@@ -9,6 +10,8 @@ function WritePostPage() {
   const [tag, setTag] = useState("reflection");
   const [imageUrl, setImageUrl] = useState("");
   const [visibility, setVisibility] = useState("private");
+
+  const navigate = useNavigate();
 
   {/*NOTE: LOGICS SHOULD BE IMPLEMENTED IN BACKEND. THESE ARE TEMPORARY PLACEHOLDERS */}
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
@@ -31,14 +34,8 @@ function WritePostPage() {
     });
 
     console.log("Created post:", newPost);
-
     alert("Post created!");
-
-    setTitle("");
-    setContent("");
-    setTag("reflection");
-    setImageUrl("");
-    setVisibility("private");
+    navigate("/archive"); 
   }
 
   return (
@@ -99,14 +96,21 @@ function WritePostPage() {
               </button>
             </section>
 
-            <label> {/*Tag selector temporary feature */}
-              Tag
-              <select value={tag} onChange={(event) => setTag(event.target.value)}>
-                <option value="reflection">Reflection</option>
-                <option value="study">Study</option>
-                <option value="food">Food</option>
-                <option value="growth">Growth</option>
-              </select>
+            <label className="write-tag-field">
+              <span>Memory Tag</span>
+
+              <div className="write-tag-select-wrap">
+                <select
+                  className="write-tag-select"
+                  value={tag}
+                  onChange={(event) => setTag(event.target.value)}
+                >
+                  <option value="reflection">Reflection</option>
+                  <option value="study">Study</option>
+                  <option value="food">Food</option>
+                  <option value="growth">Growth</option>
+                </select>
+              </div>
             </label>
 
             <div className="write-bottom-bar">
