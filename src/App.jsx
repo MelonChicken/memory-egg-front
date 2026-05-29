@@ -10,10 +10,11 @@ import ViewPostPage from "./pages/ViewPostPage.jsx";
 import WritePostPage from "./pages/WritePostPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import EggDashboardPage from "./pages/EggDashboardPage.jsx";
+import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
 function App() {
-  return <ViewPostPage />;
+  return <ShopPage />;
 
   /*
   return ( 
