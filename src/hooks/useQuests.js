@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { claimQuestReward, getTodayQuests } from "../api/questsApi";
+import {
+  checkPostAgainstQuests,
+  claimQuestReward,
+  getTodayQuests,
+} from "../api/questsApi";
 
 export function useQuests() {
   const [quests, setQuests] = useState([]);
@@ -14,6 +18,14 @@ export function useQuests() {
     setLoading(false);
 
     return data;
+  }, []);
+
+  const checkPostForQuestCompletion = useCallback(async (post) => {
+    const updatedQuests = await checkPostAgainstQuests(post);
+
+    setQuests(Array.isArray(updatedQuests) ? updatedQuests : []);
+
+    return updatedQuests;
   }, []);
 
   const claimReward = useCallback(async (questId) => {
@@ -49,6 +61,7 @@ export function useQuests() {
     quests,
     loading,
     reloadQuests,
+    checkPostForQuestCompletion,
     claimReward,
   };
 }

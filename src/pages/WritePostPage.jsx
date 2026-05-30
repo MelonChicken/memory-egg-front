@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 /* import { createPost } from "../api/postsApi"; */
 import { usePosts } from "../hooks/usePosts";
-import { checkPostAgainstQuests } from "../api/questsApi";
+/* import { checkPostAgainstQuests } from "../api/questsApi"; */
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useQuests } from "../hooks/useQuests";
 import "./WritePostPage.css";
@@ -10,7 +10,7 @@ import "./WritePostPage.css";
 function WritePostPage() {
   const { addPost } = usePosts();
   const { user, reloadUser } = useCurrentUser();
-  const { quests, reloadQuests, claimReward } = useQuests();  
+  const { quests, checkPostForQuestCompletion, claimReward } = useQuests();  
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -40,8 +40,7 @@ function WritePostPage() {
       visibility,
     });
 
-    await checkPostAgainstQuests(newPost);
-    await reloadQuests();
+    await checkPostForQuestCompletion(newPost);
 
     alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 
