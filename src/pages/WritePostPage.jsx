@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 /* import { createPost } from "../api/postsApi"; */
 import { usePosts } from "../hooks/usePosts";
+import { checkPostAgainstQuests } from "../api/questsApi";
 import "./WritePostPage.css";
 
 function WritePostPage() {
@@ -27,13 +28,15 @@ function WritePostPage() {
       return;
     }
 
-    await addPost({
+    const newPost = await addPost({
       title,
       content,
       tag,
       image_url: null,
       visibility,
     });
+
+    await checkPostAgainstQuests(newPost);
 
     alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 
