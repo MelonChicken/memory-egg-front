@@ -9,17 +9,6 @@ import windowBackgroundImage from "../assets/background.png";
 function EggDashboardPage() {
   return (
     <main className="app-page egg-dashboard-page">
-      <header className="dashboard-header">
-        <h1>Nacimiento - My Egg</h1>
-
-        <div className="dashboard-user">
-          <div className="dashboard-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
-          </div>
-          <div className="dashboard-avatar" aria-label="User profile placeholder" />
-        </div>
-      </header>
 
       <section className="dashboard-content">
         <section className="window-area" aria-label="Egg window scene placeholder">

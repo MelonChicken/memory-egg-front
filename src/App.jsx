@@ -3,7 +3,8 @@
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
 
-import Layout from "./components/Layout.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header.jsx";
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -15,16 +16,17 @@ import InventoryPage from "./pages/InventoryPage.jsx";
 import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
+/*This App code is only temporary to test the header functionnality*/
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<EggDashboardPage />} />
-          
+      <Header />
+      <main style={{ padding: "1rem" }}>
+        <Routes>
+          <Route path="/" element={<EggDashboardPage />} />
           <Route path="login" element={<LoginPage />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </main>
     </BrowserRouter>
   );
 }
