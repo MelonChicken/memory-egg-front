@@ -19,8 +19,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<WritePostPage />} />
+        <Route path="/" element={<EggDashboardPage />} />
         <Route path="/write" element={<WritePostPage />} />
+        <Route path="/nest" element={<EggDashboardPage />} />
         <Route path="/archive" element={<MemoryArchivePage />} />
         <Route path="/posts/:id" element={<ViewPostPage />} />
       </Routes>
