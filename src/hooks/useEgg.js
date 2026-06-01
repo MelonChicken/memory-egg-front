@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  equipEggItem,
-  getEgg,
-  recalculateEggStatsFromPosts,
-} from "../api/eggApi";
+import { getEgg, recalculateEggFromInventory } from "../api/eggApi";
 
 export function useEgg() {
   const [egg, setEgg] = useState(null);
@@ -20,16 +16,8 @@ export function useEgg() {
     return data;
   }, []);
 
-  const recalculateFromPosts = useCallback(async (posts) => {
-    const updatedEgg = await recalculateEggStatsFromPosts(posts);
-
-    setEgg(updatedEgg);
-
-    return updatedEgg;
-  }, []);
-
-  const equipItem = useCallback(async ({ itemType, itemId }) => {
-    const updatedEgg = await equipEggItem({ itemType, itemId });
+  const recalculateFromInventory = useCallback(async (inventoryItems) => {
+    const updatedEgg = await recalculateEggFromInventory(inventoryItems);
 
     setEgg(updatedEgg);
 
@@ -59,7 +47,6 @@ export function useEgg() {
     egg,
     loading,
     reloadEgg,
-    recalculateFromPosts,
-    equipItem,
+    recalculateFromInventory,
   };
 }

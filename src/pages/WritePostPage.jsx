@@ -2,12 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 /* import { createPost } from "../api/postsApi"; */
 import { usePosts } from "../hooks/usePosts";
-import { useEgg } from "../hooks/useEgg";
 import "./WritePostPage.css";
 
 function WritePostPage() {
   const { addPost } = usePosts();
-  const { recalculateFromPosts } = useEgg();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -38,7 +36,6 @@ function WritePostPage() {
     });
 
     /*await checkPostForQuestCompletion(newPost);*/
-    await recalculateFromPosts(updatedPosts);
 
     alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 

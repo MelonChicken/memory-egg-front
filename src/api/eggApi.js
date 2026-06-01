@@ -28,95 +28,80 @@ function loadEggFromStorage() {
     return defaultEgg;
   }
 
-  return parsedEgg;
+  return {
+    ...defaultEgg,
+    ...parsedEgg,
+    stage: 1,
+  };
 }
 
 function saveEggToStorage(egg) {
   localStorage.setItem(EGG_STORAGE_KEY, JSON.stringify(egg));
 }
 
-function clampStat(value) {
-  return Math.max(0, Math.min(100, value));
+function getEmptyStats() {
+  return {
+    glow: 0,
+    warmth: 0,
+    weight: 0,
+  };
 }
 
-function calculateStage({ glow, warmth, weight }) {
-  const average = (glow + warmth + weight) / 3;
+function getDecorationStats(decorationItem) {
+  const stats = getEmptyStats();
 
-  if (average >= 80) {
-    return 4;
+  if (!decorationItem || decorationItem.item_type !== "decoration") {
+    return stats;
   }
 
-  if (average >= 55) {
-    return 3;
+  if (!decorationItem.effect_type || !decorationItem.effect_value) {
+    return stats;
   }
 
-  if (average >= 30) {
-    return 2;
+  if (!Object.hasOwn(stats, decorationItem.effect_type)) {
+    return stats;
   }
-
-  return 1;
-}
-
-function calculateStatsFromPosts(posts) {
-  const tagCounts = posts.reduce(
-    (counts, post) => {
-      const tag = post.tag;
-
-      return {
-        ...counts,
-        [tag]: (counts[tag] || 0) + 1,
-      };
-    },
-    {}
-  );
 
   return {
-    glow: clampStat((tagCounts.study || 0) * 5),
-    warmth: clampStat((tagCounts.reflection || 0) * 3),
-    weight: clampStat((tagCounts.food || 0) * 5),
+    ...stats,
+    [decorationItem.effect_type]: Number(decorationItem.effect_value),
   };
+}
+
+function findEquippedItemByType(inventoryItems, itemType) {
+  return inventoryItems.find(
+    (item) => item.item_type === itemType && item.is_equipped
+  );
 }
 
 export async function getEgg() {
   return loadEggFromStorage();
 }
 
-export async function recalculateEggStatsFromPosts(posts) {
+export async function recalculateEggFromInventory(inventoryItems) {
   const egg = loadEggFromStorage();
-  const calculatedStats = calculateStatsFromPosts(posts);
+
+  const equippedBackground = findEquippedItemByType(
+    inventoryItems,
+    "background"
+  );
+  const equippedMusic = findEquippedItemByType(inventoryItems, "music");
+  const equippedDecoration = findEquippedItemByType(
+    inventoryItems,
+    "decoration"
+  );
+
+  const decorationStats = getDecorationStats(equippedDecoration);
 
   const updatedEgg = {
     ...egg,
-    glow: calculatedStats.glow,
-    warmth: calculatedStats.warmth,
-    weight: calculatedStats.weight,
-    stage: calculateStage(calculatedStats),
-    updated_at: new Date().toISOString(),
-  };
-
-  saveEggToStorage(updatedEgg);
-
-  return updatedEgg;
-}
-
-export async function equipEggItem({ itemType, itemId }) {
-  const egg = loadEggFromStorage();
-
-  const equipFieldByType = {
-    background: "active_background_id",
-    music: "active_music_id",
-    decoration: "active_decoration_id",
-  };
-
-  const fieldName = equipFieldByType[itemType];
-
-  if (!fieldName) {
-    throw new Error("Invalid egg item type.");
-  }
-
-  const updatedEgg = {
-    ...egg,
-    [fieldName]: itemId,
+    stage: 1,
+    glow: decorationStats.glow,
+    warmth: decorationStats.warmth,
+    weight: decorationStats.weight,
+    active_background_id: equippedBackground?.item_id ?? null,
+    active_music_id: equippedMusic?.item_id ?? null,
+    active_decoration_id: equippedDecoration?.item_id ?? null,
     updated_at: new Date().toISOString(),
   };
 
