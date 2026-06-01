@@ -131,9 +131,6 @@ function InventoryPage() {
       <section className="inventory-window" aria-label="Inventory">
         <header className="inventory-window-header">
           <h1>▰ Inventory</h1>
-          <a className="inventory-info-button" href="/nest" aria-label="Return to egg">
-            ⊙
-          </a>
         </header>
 
         <div className="inventory-content">
@@ -181,11 +178,20 @@ function InventoryPage() {
                       )}
                     </div>
 
-                    <strong>{item.name}</strong>
+                    {item.is_equipped && <span className="equipped-badge">Equipped</span>}
 
-                    {item.is_equipped && (
-                      <span className="item-equipped-badge">Equipped</span>
-                    )}
+                    <div className="inventory-item-info">
+                      <div>
+                        <strong>{item.name}</strong>
+                        <p className="inventory-item-description">{item.description}</p>
+                      </div>
+
+                      {item.effect_type && item.effect_value && (
+                        <span className="effect-label">
+                          +{item.effect_value} {item.effect_type}
+                        </span>
+                      )}
+                    </div>
                   </button>
                 ))
               )}
