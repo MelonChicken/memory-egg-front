@@ -4,7 +4,7 @@
 // <h1 /> tests title style
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header.jsx";
+import Header from "./components/header.jsx";
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
