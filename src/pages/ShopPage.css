@@ -9,11 +9,12 @@
 /* Header */
 
 .shop-header {
-  height: 42px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.8rem;
+  gap: 1rem;
+  padding: 0 2rem;
   background: var(--color-bg-soft);
   border-bottom: 1px solid var(--color-border);
 }
@@ -90,11 +91,33 @@
   transform: translateX(-50%);
 }
 
+.shop-return-link {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  border: 1px solid #cdbeb4;
+  border-radius: 999px;
+  background: #fffdf8;
+  color: #5d463c;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.shop-return-link:hover {
+  background: #f3ede5;
+  color: #4a342b;
+}
+
 /* Shop window */
 
 .shop-window {
   width: min(100% - 3rem, 1120px);
-  height: calc(100dvh - 42px - 5rem);
+  height: calc(100dvh - 72px - 5rem);
   min-height: 560px;
   margin: 2.5rem auto;
   display: grid;
@@ -381,12 +404,20 @@
   cursor: not-allowed;
 }
 
+.shop-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-left: auto;
+}
+
 /* Responsive */
 
 @media (max-width: 900px) {
   .shop-window {
     width: min(100% - 2rem, 720px);
-    height: calc(100dvh - 42px - 2rem);
+    height: calc(100dvh - 72px - 2rem);
     min-height: 0;
     margin: 1rem auto;
     grid-template-rows: 64px minmax(0, 1fr) 86px;
@@ -433,8 +464,16 @@
 
 @media (max-width: 560px) {
   .shop-header {
-    height: 54px;
-    padding: 0 1rem;
+    height: auto;
+    min-height: 60px;
+    padding: 0.7rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .shop-return-link {
+    min-height: 30px;
+    padding: 0 0.75rem;
+    font-size: 0.7rem;
   }
 
   .will-balance {
@@ -445,7 +484,7 @@
 
   .shop-window {
     width: min(100% - 1rem, 440px);
-    height: calc(100dvh - 54px - 1rem);
+    height: calc(100dvh - 60px - 1rem);
     margin: 0.5rem auto;
     border-radius: 18px;
     grid-template-rows: 58px minmax(0, 1fr) 76px;
@@ -530,5 +569,11 @@
     min-width: 96px;
     min-height: 40px;
     font-size: 0.76rem;
+  }
+
+  .shop-footer-actions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
   }
 }

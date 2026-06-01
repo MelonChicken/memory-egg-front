@@ -115,8 +115,8 @@ function ShopPage() {
       <section className="shop-window" aria-label="Egg shop">
         <header className="shop-window-header">
           <h1>▦ Egg Shop</h1>
-          <a className="shop-info-button" href="/nest" aria-label="Return to egg">
-            ⊙
+          <a className="shop-return-link" href="/nest" aria-label="Return to egg">
+            Return To Egg
           </a>
         </header>
 
@@ -139,28 +139,45 @@ function ShopPage() {
 
           <section className="shop-item-panel" aria-label="Shop items">
             <div className="shop-item-grid">
-              {visibleItems.map((item) => (
-                <button
-                  className={`shop-item-card ${
-                    Number(selectedItem?.item_id) === Number(item.item_id) ? "selected" : ""
-                  }`}
-                  key={item.item_id}
-                  type="button"
-                  onClick={() => setSelectedItemId(item.item_id)}
-                >
-                  <div className="shop-item-image">
-                    {item.asset_url ? <img src={item.asset_url} alt={item.name} /> : <span>▧</span>}
-                  </div>
+              {loading ? (
+                <p className="shop-error-message">Loading shop...</p>
+              ) : visibleItems.length === 0 ? (
+                <p className="shop-error-message">No items available.</p>
+              ) : (
+                visibleItems.map((item) => (
+                  <button
+                    className={`shop-item-card ${
+                      Number(selectedItem?.item_id) === Number(item.item_id) ? "selected" : ""
+                    }`}
+                    key={item.item_id}
+                    type="button"
+                    onClick={() => setSelectedItemId(item.item_id)}
+                  >
+                    <div className="shop-item-image">
+                      {item.asset_url ? (
+                        <img src={item.asset_url} alt={item.name} />
+                      ) : (
+                        <span>▧</span>
+                      )}
+                    </div>
 
-                  <strong>{item.name}</strong>
-                  <span>{item.price} Will</span>
+                    {item.equipped && <span className="equipped-badge">Equipped</span>}
 
-                  <div className="shop-item-badges">
-                    {item.owned && <span className="item-owned-badge">Owned</span>}
-                    {item.equipped && <span className="item-equipped-badge">Equipped</span>}
-                  </div>
-                </button>
-              ))}
+                    <div className="shop-item-info">
+                      <div>
+                        <strong>{item.name}</strong>
+                        <p className="shop-item-description">{item.description}</p>
+                      </div>
+
+                      {item.owned ? (
+                        <span className="owned-label">Owned</span>
+                      ) : (
+                        <span className="price-label">{item.price} Will</span>
+                      )}
+                    </div>
+                  </button>
+                ))
+              )}
             </div>
           </section>
         </div>
@@ -170,24 +187,31 @@ function ShopPage() {
             Close
           </a>
 
-          {selectedItem && !selectedItem.owned && (
-            <button
-              className="buy-item-button"
-              type="button"
-              onClick={handlePurchaseSelectedItem}
-              disabled={!user || user.will_balance < selectedItem.price}
-            >
-              Buy Item
-            </button>
-          )}
+          <div className="shop-footer-actions">
+            {(errorMessage ||
+              (selectedItem && user && user.will_balance < selectedItem.price)) && (
+              <p className="shop-error-message">
+                {errorMessage || "Not enough Will."}
+              </p>
+            )}
 
-          {selectedItem?.owned && (
-            <button className="buy-item-button" type="button" disabled>
-              Owned
-            </button>
-          )}
+            {selectedItem && !selectedItem.owned && (
+              <button
+                className="buy-item-button"
+                type="button"
+                onClick={handlePurchaseSelectedItem}
+                disabled={!user || user.will_balance < selectedItem.price}
+              >
+                Buy Item
+              </button>
+            )}
 
-          {errorMessage && <p className="shop-error-message">{errorMessage}</p>}
+            {selectedItem?.owned && (
+              <button className="buy-item-button" type="button" disabled>
+                Owned
+              </button>
+            )}
+          </div>
         </footer>
       </section>
     </main>
