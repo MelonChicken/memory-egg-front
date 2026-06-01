@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useInventory } from "../hooks/useInventory";
+import { useEgg } from "../hooks/useEgg";
 import "./InventoryPage.css";
 
 const inventoryCategories = [
@@ -23,6 +24,7 @@ const inventoryCategories = [
 function InventoryPage() {
   const [activeCategory, setActiveCategory] = useState("background");
   const [selectedUserItemId, setSelectedUserItemId] = useState(null);
+  const { recalculateFromInventory } = useEgg();
 
   const {
     inventoryItems,
@@ -69,13 +71,15 @@ function InventoryPage() {
         ? await unequipItem(selectedItem.user_item_id)
         : await equipItem(selectedItem.user_item_id);
 
+      await recalculateFromInventory(updatedInventoryItems);
+
       const stillSelectedItem = updatedInventoryItems.find(
         (item) => Number(item.user_item_id) === Number(selectedItem.user_item_id)
       );
 
       setSelectedUserItemId(stillSelectedItem?.user_item_id ?? null);
     } catch {
-      // errorMessage is handled inside useInventory
+      // errorMessage is handled inside useInventory / useEgg
     }
   }
 
