@@ -9,7 +9,6 @@ import windowBackgroundImage from "../assets/background.png";
 function EggDashboardPage() {
   return (
     <main className="app-page egg-dashboard-page">
-
       <section className="dashboard-content">
         <section className="window-area" aria-label="Egg window scene placeholder">
           <div

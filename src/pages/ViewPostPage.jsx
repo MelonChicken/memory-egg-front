@@ -3,22 +3,6 @@ import "./ViewPostPage.css";
 function ViewPostPage() {
   return (
     <main className="app-page view-post-page">
-      <header className="view-header">
-        <div className="view-brand">Nacimiento</div>
-
-        <nav className="view-nav" aria-label="Main navigation">
-          <a href="/nest">⌂ Nest</a>
-          <a href="/shop">▣ Shop</a>
-        </nav>
-
-        <div className="view-user">
-          <div className="view-user-text">
-            <span>WANDERER</span>
-            <strong>14 Days</strong>
-          </div>
-          <div className="view-avatar" aria-label="User profile placeholder" />
-        </div>
-      </header>
 
       <section className="view-post-layout">
         <a className="back-to-archive" href="/archive">

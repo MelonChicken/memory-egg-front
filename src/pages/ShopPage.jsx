@@ -323,18 +323,6 @@ function ShopPage() {
 
   return (
     <main className="app-page shop-page">
-      <header className="shop-header">
-        <div className="will-balance">✧ 1,250 Will</div>
-
-        <div className="shop-user">
-          <div className="shop-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
-          </div>
-          <div className="shop-avatar" aria-label="User profile placeholder" />
-        </div>
-      </header>
-
       <section className="shop-window" aria-label="Egg shop">
         <header className="shop-window-header">
           <h1>▦ Egg Shop</h1>
