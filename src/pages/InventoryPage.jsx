@@ -3,12 +3,12 @@ import "./InventoryPage.css";
 
 const inventoryCategories = [
   {
-    id: "backgrounds",
+    id: "background",
     label: "Backgrounds",
     icon: "▱",
   },
   {
-    id: "decorations",
+    id: "decoration",
     label: "Decorations",
     icon: "⚭",
   },

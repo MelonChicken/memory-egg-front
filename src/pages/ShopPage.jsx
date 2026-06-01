@@ -1,14 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getShopItems, purchaseShopItem } from "../api/shopApi";
+import { getCurrentUser } from "../api/userApi";
 import "./ShopPage.css";
 
 const shopCategories = [
   {
-    id: "backgrounds",
+    id: "background",
     label: "Backgrounds",
     icon: "▱",
   },
   {
-    id: "decorations",
+    id: "decoration",
     label: "Decorations",
     icon: "⚭",
   },
@@ -19,295 +21,55 @@ const shopCategories = [
   },
 ];
 
-const shopItems = [
-  {
-    item_id: 1,
-    name: "Starry Night",
-    item_type: "backgrounds",
-    description: "A quiet night sky for your egg's resting place.",
-    price: 0,
-    effect_type: "glow",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-
-    // Temporary frontend-only mock fields.
-    owned: true,
-    equipped: true,
-  },
-  {
-    item_id: 2,
-    name: "Good Morning",
-    item_type: "backgrounds",
-    description: "A warm morning background filled with soft light.",
-    price: 450,
-    effect_type: "warmth",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 3,
-    name: "Dreamy Cloud",
-    item_type: "backgrounds",
-    description: "A gentle cloudy scene for slow reflection.",
-    price: 300,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 4,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 5,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 6,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 7,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 8,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 9,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 10,
-    name: "Test Item",
-    item_type: "backgrounds",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 11,
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: true,
-    equipped: false,
-  },
-  {
-    item_id: 12,
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 13,
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 14,
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 15,
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 16,
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Wow! a shop!",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 17,
-    name: "Test Music",
-    item_type: "music",
-    description: "Music is life",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 18,
-    name: "Invisible music",
-    item_type: "music",
-    description: "You shouldn't be able to see me.",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: false,
-
-    owned: false,
-    equipped: false,
-  },
-  {
-    item_id: 17,
-    name: "Invisible deco",
-    item_type: "decorations",
-    description: "You shouldn't be able to see me.",
-    price: 999,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: false,
-
-    owned: false,
-    equipped: false,
-  },
-];
-
 function ShopPage() {
-  const [activeCategory, setActiveCategory] = useState("backgrounds");
-  const [selectedItemId, setSelectedItemId] = useState(1);
+  const [activeCategory, setActiveCategory] = useState("background");
+  const [shopItems, setShopItems] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+
+  useEffect(() => {
+    async function loadShopPageData() {
+      setLoading(true);
+
+      const [items, currentUser] = await Promise.all([
+        getShopItems(),
+        getCurrentUser(),
+      ]);
+
+      setShopItems(Array.isArray(items) ? items : []);
+      setUser(currentUser);
+
+      const firstVisibleItem = items.find(
+        (item) => item.item_type === activeCategory && item.is_active
+      );
+
+      setSelectedItemId(firstVisibleItem?.item_id ?? null);
+      setLoading(false);
+    }
+
+    loadShopPageData();
+  }, [activeCategory]);
 
   const visibleItems = useMemo(() => {
     return shopItems.filter(
       (item) => item.item_type === activeCategory && item.is_active
     );
-  }, [activeCategory]);
+  }, [activeCategory, shopItems]);
 
   const selectedItem = useMemo(() => {
-    const selected = shopItems.find((item) => item.item_id === selectedItemId);
+    const selected = shopItems.find(
+      (item) => Number(item.item_id) === Number(selectedItemId)
+    );
 
     if (selected && selected.item_type === activeCategory && selected.is_active) {
       return selected;
     }
 
     return visibleItems[0] ?? null;
-  }, [activeCategory, selectedItemId, visibleItems]);
+  }, [activeCategory, selectedItemId, shopItems, visibleItems]);
 
   function handleCategoryChange(categoryId) {
     const firstItem = shopItems.find(
@@ -315,16 +77,31 @@ function ShopPage() {
     );
 
     setActiveCategory(categoryId);
-
-    if (firstItem) {
-      setSelectedItemId(firstItem.item_id);
-    }
+    setSelectedItemId(firstItem?.item_id ?? null);
   }
+
+  async function handlePurchaseSelectedItem() {
+  if (!selectedItem) {
+    return;
+  }
+
+  setErrorMessage("");
+
+  try {
+    const result = await purchaseShopItem(selectedItem.item_id);
+
+    setShopItems(result.shopItems);
+    setUser(result.user);
+    setSelectedItemId(selectedItem.item_id);
+  } catch (error) {
+    setErrorMessage(error.message);
+  }
+}
 
   return (
     <main className="app-page shop-page">
       <header className="shop-header">
-        <div className="will-balance">✧ 1,250 Will</div>
+        <div className="will-balance">✧ {user ? user.will_balance : 0} Will</div>
 
         <div className="shop-user">
           <div className="shop-user-text">
@@ -364,11 +141,11 @@ function ShopPage() {
             <div className="shop-item-grid">
               {visibleItems.map((item) => (
                 <button
-                  key={item.item_id}
                   className={`shop-item-card ${
-                    selectedItem?.item_id === item.item_id ? "selected" : ""
+                    Number(selectedItem?.item_id) === Number(item.item_id) ? "selected" : ""
                   }`}
                   type="button"
+                  key={item.item_id}
                   onClick={() => setSelectedItemId(item.item_id)}
                 >
                   {item.equipped && <span className="equipped-badge">Equipped</span>}
@@ -407,10 +184,23 @@ function ShopPage() {
           </a>
 
           {selectedItem && !selectedItem.owned && (
-            <button className="buy-item-button" type="button">
+            <button
+              className="buy-item-button"
+              type="button"
+              onClick={handlePurchaseSelectedItem}
+              disabled={!user || user.will_balance < selectedItem.price}
+            >
               Buy Item
             </button>
           )}
+
+          {selectedItem?.owned && (
+            <button className="buy-item-button" type="button" disabled>
+              Owned
+            </button>
+          )}
+
+          {errorMessage && <p className="shop-error-message">{errorMessage}</p>}
         </footer>
       </section>
     </main>
