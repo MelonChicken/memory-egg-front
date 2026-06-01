@@ -144,33 +144,20 @@ function ShopPage() {
                   className={`shop-item-card ${
                     Number(selectedItem?.item_id) === Number(item.item_id) ? "selected" : ""
                   }`}
-                  type="button"
                   key={item.item_id}
+                  type="button"
                   onClick={() => setSelectedItemId(item.item_id)}
                 >
-                  {item.equipped && <span className="equipped-badge">Equipped</span>}
-
                   <div className="shop-item-image">
-                    {item.asset_url ? (
-                      <img src={item.asset_url} alt="" />
-                    ) : (
-                      <span className="shop-image-placeholder" />
-                    )}
+                    {item.asset_url ? <img src={item.asset_url} alt={item.name} /> : <span>▧</span>}
                   </div>
 
-                  <div className="shop-item-info">
-                    <div>
-                      <strong>{item.name}</strong>
-                      {item.description && (
-                        <p className="shop-item-description">{item.description}</p>
-                      )}
-                    </div>
+                  <strong>{item.name}</strong>
+                  <span>{item.price} Will</span>
 
-                    {item.owned ? (
-                      <span className="owned-label">Owned</span>
-                    ) : (
-                      <span className="price-label">{item.price} ✦</span>
-                    )}
+                  <div className="shop-item-badges">
+                    {item.owned && <span className="item-owned-badge">Owned</span>}
+                    {item.equipped && <span className="item-equipped-badge">Equipped</span>}
                   </div>
                 </button>
               ))}

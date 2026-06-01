@@ -24,6 +24,10 @@ function App() {
         <Route path="/nest" element={<EggDashboardPage />} />
         <Route path="/archive" element={<MemoryArchivePage />} />
         <Route path="/posts/:id" element={<ViewPostPage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        
       </Routes>
     </BrowserRouter>
   );

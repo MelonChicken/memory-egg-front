@@ -155,48 +155,40 @@ function InventoryPage() {
 
           <section className="inventory-item-panel" aria-label="Inventory items">
             <div className="inventory-item-grid">
-              {visibleItems.map((item) => (
-                <button
-                  className={`inventory-item-card ${
-                    Number(selectedItem?.user_item_id) === Number(item.user_item_id)
-                      ? "selected"
-                      : ""
-                  }`}
-                  type="button"
-                  key={item.user_item_id}
-                  onClick={() => setSelectedUserItemId(item.user_item_id)}
-                >
-                  {item.is_equipped && (
-                    <span className="equipped-badge">Equipped</span>
-                  )}
-
-                  <div className="inventory-item-image">
-                    {item.asset_url ? (
-                      <img src={item.asset_url} alt="" />
-                    ) : (
-                      <span className="inventory-image-placeholder" />
-                    )}
-                  </div>
-
-                  <div className="inventory-item-info">
-                    <div>
-                      <strong>{item.name}</strong>
-
-                      {item.quantity > 1 && (
-                        <span className="inventory-quantity">
-                          x{item.quantity}
-                        </span>
-                      )}
-
-                      {item.description && (
-                        <p className="inventory-item-description">
-                          {item.description}
-                        </p>
+              {loading ? (
+                <p className="inventory-empty-message">Loading inventory...</p>
+              ) : visibleItems.length === 0 ? (
+                <p className="inventory-empty-message">
+                  No items owned in this category yet.
+                </p>
+              ) : (
+                visibleItems.map((item) => (
+                  <button
+                    className={`inventory-item-card ${
+                      Number(selectedItem?.user_item_id) === Number(item.user_item_id)
+                        ? "selected"
+                        : ""
+                    }`}
+                    key={item.user_item_id}
+                    type="button"
+                    onClick={() => setSelectedUserItemId(item.user_item_id)}
+                  >
+                    <div className="inventory-item-image">
+                      {item.asset_url ? (
+                        <img src={item.asset_url} alt={item.name} />
+                      ) : (
+                        <span>▧</span>
                       )}
                     </div>
-                  </div>
-                </button>
-              ))}
+
+                    <strong>{item.name}</strong>
+
+                    {item.is_equipped && (
+                      <span className="item-equipped-badge">Equipped</span>
+                    )}
+                  </button>
+                ))
+              )}
             </div>
           </section>
         </div>

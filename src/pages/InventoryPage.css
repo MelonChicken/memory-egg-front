@@ -378,6 +378,25 @@
   background: #5a2b1e;
 }
 
+.inventory-empty-message,
+.inventory-error-message {
+  margin: 0;
+  padding: 0.8rem;
+  color: #7c7167;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.inventory-error-message {
+  color: #b34135;
+  font-weight: 800;
+}
+
+.equip-item-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* Responsive */
 
 @media (max-width: 900px) {
