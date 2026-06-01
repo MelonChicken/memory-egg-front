@@ -1,10 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { getRawShopItems } from "../api/shopApi";
-import {
-  equipUserItem,
-  getInventoryItems,
-  unequipUserItem,
-} from "../api/inventoryApi";
+import { useMemo, useState } from "react";
+import { useInventory } from "../hooks/useInventory";
 import "./InventoryPage.css";
 
 const inventoryCategories = [
@@ -27,32 +22,15 @@ const inventoryCategories = [
 
 function InventoryPage() {
   const [activeCategory, setActiveCategory] = useState("background");
-  const [inventoryItems, setInventoryItems] = useState([]);
-  const [shopItems, setShopItems] = useState([]);
   const [selectedUserItemId, setSelectedUserItemId] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    async function loadInventoryPageData() {
-      setLoading(true);
-
-      const rawShopItems = await getRawShopItems();
-      const items = await getInventoryItems(rawShopItems);
-
-      setShopItems(rawShopItems);
-      setInventoryItems(Array.isArray(items) ? items : []);
-
-      const firstVisibleItem = items.find(
-        (item) => item.item_type === activeCategory && item.is_active
-      );
-
-      setSelectedUserItemId(firstVisibleItem?.user_item_id ?? null);
-      setLoading(false);
-    }
-
-    loadInventoryPageData();
-  }, [activeCategory]);
+  const {
+    inventoryItems,
+    loading,
+    errorMessage,
+    equipItem,
+    unequipItem,
+  } = useInventory();
 
   const visibleItems = useMemo(() => {
     return inventoryItems.filter(
@@ -86,26 +64,18 @@ function InventoryPage() {
       return;
     }
 
-    setErrorMessage("");
-
     try {
-      const updatedUserItems = selectedItem.is_equipped
-        ? await unequipUserItem(selectedItem.user_item_id)
-        : await equipUserItem(selectedItem.user_item_id, shopItems);
-
-      const rawShopItems = await getRawShopItems();
-      const updatedInventoryItems = await getInventoryItems(rawShopItems);
-
-      setShopItems(rawShopItems);
-      setInventoryItems(updatedInventoryItems);
+      const updatedInventoryItems = selectedItem.is_equipped
+        ? await unequipItem(selectedItem.user_item_id)
+        : await equipItem(selectedItem.user_item_id);
 
       const stillSelectedItem = updatedInventoryItems.find(
         (item) => Number(item.user_item_id) === Number(selectedItem.user_item_id)
       );
 
       setSelectedUserItemId(stillSelectedItem?.user_item_id ?? null);
-    } catch (error) {
-      setErrorMessage(error.message);
+    } catch {
+      // errorMessage is handled inside useInventory
     }
   }
 

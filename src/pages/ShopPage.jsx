@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { getShopItems, purchaseShopItem } from "../api/shopApi";
-import { getCurrentUser } from "../api/userApi";
+import { useMemo, useState } from "react";
+import { useShop } from "../hooks/useShop";
 import "./ShopPage.css";
 
 const shopCategories = [
@@ -23,35 +22,15 @@ const shopCategories = [
 
 function ShopPage() {
   const [activeCategory, setActiveCategory] = useState("background");
-  const [shopItems, setShopItems] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
 
-
-  useEffect(() => {
-    async function loadShopPageData() {
-      setLoading(true);
-
-      const [items, currentUser] = await Promise.all([
-        getShopItems(),
-        getCurrentUser(),
-      ]);
-
-      setShopItems(Array.isArray(items) ? items : []);
-      setUser(currentUser);
-
-      const firstVisibleItem = items.find(
-        (item) => item.item_type === activeCategory && item.is_active
-      );
-
-      setSelectedItemId(firstVisibleItem?.item_id ?? null);
-      setLoading(false);
-    }
-
-    loadShopPageData();
-  }, [activeCategory]);
+  const {
+    shopItems,
+    user,
+    loading,
+    errorMessage,
+    purchaseItem,
+  } = useShop();
 
   const visibleItems = useMemo(() => {
     return shopItems.filter(
@@ -81,22 +60,17 @@ function ShopPage() {
   }
 
   async function handlePurchaseSelectedItem() {
-  if (!selectedItem) {
-    return;
+    if (!selectedItem) {
+      return;
+    }
+
+    try {
+      await purchaseItem(selectedItem.item_id);
+      setSelectedItemId(selectedItem.item_id);
+    } catch {
+      // errorMessage is handled inside useShop
+    }
   }
-
-  setErrorMessage("");
-
-  try {
-    const result = await purchaseShopItem(selectedItem.item_id);
-
-    setShopItems(result.shopItems);
-    setUser(result.user);
-    setSelectedItemId(selectedItem.item_id);
-  } catch (error) {
-    setErrorMessage(error.message);
-  }
-}
 
   return (
     <main className="app-page shop-page">
