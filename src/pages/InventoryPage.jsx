@@ -1,4 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getRawShopItems } from "../api/shopApi";
+import {
+  equipUserItem,
+  getInventoryItems,
+  unequipUserItem,
+} from "../api/inventoryApi";
 import "./InventoryPage.css";
 
 const inventoryCategories = [
@@ -19,225 +25,34 @@ const inventoryCategories = [
   },
 ];
 
-const initialInventoryItems = [
-  {
-    user_item_id: 1,
-    user_id: 1,
-    item_id: 1,
-    quantity: 1,
-    is_equipped: true,
-    purchased_at: "2026-05-01",
-
-    name: "Starry Night",
-    item_type: "backgrounds",
-    description: "A quiet night sky for your egg's resting place.",
-    price: 0,
-    effect_type: "glow",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-  },
-  {
-    user_item_id: 2,
-    user_id: 1,
-    item_id: 2,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-02",
-
-    name: "Good Morning",
-    item_type: "backgrounds",
-    description: "A warm morning background filled with soft light.",
-    price: 450,
-    effect_type: "warmth",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-  },
-  {
-    user_item_id: 3,
-    user_id: 1,
-    item_id: 3,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-03",
-
-    name: "Dreamy Cloud",
-    item_type: "backgrounds",
-    description: "A gentle cloudy scene for slow reflection.",
-    price: 300,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-  },
-
-  // Extra background test items
-  ...Array.from({ length: 9 }, (_, index) => ({
-    user_item_id: 100 + index,
-    user_id: 1,
-    item_id: 100 + index,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-04",
-
-    name: "Test Backgrounds",
-    item_type: "backgrounds",
-    description: "Test background item for scrolling.",
-    price: 100,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-  })),
-
-  {
-    user_item_id: 4,
-    user_id: 1,
-    item_id: 4,
-    quantity: 1,
-    is_equipped: true,
-    purchased_at: "2026-05-05",
-
-    name: "Warm Blanket",
-    item_type: "decorations",
-    description: "A soft blanket that makes the egg feel warmer.",
-    price: 120,
-    effect_type: "warmth",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-  },
-  {
-    user_item_id: 5,
-    user_id: 1,
-    item_id: 5,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-05",
-
-    name: "Tiny Lamp",
-    item_type: "decorations",
-    description: "A small lamp that helps the egg glow softly.",
-    price: 180,
-    effect_type: "glow",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-  },
-  {
-    user_item_id: 6,
-    user_id: 1,
-    item_id: 6,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-06",
-
-    name: "Shell Ribbon",
-    item_type: "decorations",
-    description: "A decorative ribbon for the egg shell.",
-    price: 220,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-  },
-
-  // Extra decoration test items
-  ...Array.from({ length: 9 }, (_, index) => ({
-    user_item_id: 200 + index,
-    user_id: 1,
-    item_id: 200 + index,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-07",
-
-    name: "Test Deco",
-    item_type: "decorations",
-    description: "Test decoration item for scrolling.",
-    price: 80,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-  })),
-
-  {
-    user_item_id: 7,
-    user_id: 1,
-    item_id: 7,
-    quantity: 1,
-    is_equipped: true,
-    purchased_at: "2026-05-08",
-
-    name: "Rainy Lullaby",
-    item_type: "music",
-    description: "A quiet rainy melody for writing memories.",
-    price: 250,
-    effect_type: "weight",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-  },
-  {
-    user_item_id: 8,
-    user_id: 1,
-    item_id: 8,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-08",
-
-    name: "Morning Piano",
-    item_type: "music",
-    description: "A calm piano piece for beginning the day.",
-    price: 320,
-    effect_type: "glow",
-    effect_value: 1,
-    asset_url: null,
-    is_active: true,
-  },
-  {
-    user_item_id: 9,
-    user_id: 1,
-    item_id: 9,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-09",
-
-    name: "Soft Static",
-    item_type: "music",
-    description: "A soft ambient track for quiet focus.",
-    price: 150,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-  },
-
-  // Extra music test items
-  ...Array.from({ length: 9 }, (_, index) => ({
-    user_item_id: 300 + index,
-    user_id: 1,
-    item_id: 300 + index,
-    quantity: 1,
-    is_equipped: false,
-    purchased_at: "2026-05-10",
-
-    name: "Test Music",
-    item_type: "music",
-    description: "Test music item for scrolling.",
-    price: 90,
-    effect_type: null,
-    effect_value: null,
-    asset_url: null,
-    is_active: true,
-  })),
-];
-
 function InventoryPage() {
-  const [activeCategory, setActiveCategory] = useState("backgrounds");
-  const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
-  const [selectedUserItemId, setSelectedUserItemId] = useState(1);
+  const [activeCategory, setActiveCategory] = useState("background");
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [shopItems, setShopItems] = useState([]);
+  const [selectedUserItemId, setSelectedUserItemId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    async function loadInventoryPageData() {
+      setLoading(true);
+
+      const rawShopItems = await getRawShopItems();
+      const items = await getInventoryItems(rawShopItems);
+
+      setShopItems(rawShopItems);
+      setInventoryItems(Array.isArray(items) ? items : []);
+
+      const firstVisibleItem = items.find(
+        (item) => item.item_type === activeCategory && item.is_active
+      );
+
+      setSelectedUserItemId(firstVisibleItem?.user_item_id ?? null);
+      setLoading(false);
+    }
+
+    loadInventoryPageData();
+  }, [activeCategory]);
 
   const visibleItems = useMemo(() => {
     return inventoryItems.filter(
@@ -247,7 +62,7 @@ function InventoryPage() {
 
   const selectedItem = useMemo(() => {
     const selected = inventoryItems.find(
-      (item) => item.user_item_id === selectedUserItemId
+      (item) => Number(item.user_item_id) === Number(selectedUserItemId)
     );
 
     if (selected && selected.item_type === activeCategory && selected.is_active) {
@@ -263,47 +78,35 @@ function InventoryPage() {
     );
 
     setActiveCategory(categoryId);
-
-    if (firstItem) {
-      setSelectedUserItemId(firstItem.user_item_id);
-    }
+    setSelectedUserItemId(firstItem?.user_item_id ?? null);
   }
 
-  function handleToggleEquip() {
+  async function handleToggleEquip() {
     if (!selectedItem) {
       return;
     }
 
-    setInventoryItems((currentItems) =>
-      currentItems.map((item) => {
-        if (item.item_type !== selectedItem.item_type) {
-          return item;
-        }
+    setErrorMessage("");
 
-        if (item.user_item_id === selectedItem.user_item_id) {
-          return {
-            ...item,
-            is_equipped: !item.is_equipped,
-          };
-        }
+    try {
+      const updatedUserItems = selectedItem.is_equipped
+        ? await unequipUserItem(selectedItem.user_item_id)
+        : await equipUserItem(selectedItem.user_item_id, shopItems);
 
-        /*
-          Placeholder behavior:
-          For now, only one item per category can be equipped at once.
+      const rawShopItems = await getRawShopItems();
+      const updatedInventoryItems = await getInventoryItems(rawShopItems);
 
-          Later, if decorations can have multiple equipped items,
-          this logic can become category-specific.
-        */
-        if (!selectedItem.is_equipped) {
-          return {
-            ...item,
-            is_equipped: false,
-          };
-        }
+      setShopItems(rawShopItems);
+      setInventoryItems(updatedInventoryItems);
 
-        return item;
-      })
-    );
+      const stillSelectedItem = updatedInventoryItems.find(
+        (item) => Number(item.user_item_id) === Number(selectedItem.user_item_id)
+      );
+
+      setSelectedUserItemId(stillSelectedItem?.user_item_id ?? null);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   }
 
   return (
@@ -354,13 +157,13 @@ function InventoryPage() {
             <div className="inventory-item-grid">
               {visibleItems.map((item) => (
                 <button
-                  key={item.user_item_id}
                   className={`inventory-item-card ${
-                    selectedItem?.user_item_id === item.user_item_id
+                    Number(selectedItem?.user_item_id) === Number(item.user_item_id)
                       ? "selected"
                       : ""
                   }`}
                   type="button"
+                  key={item.user_item_id}
                   onClick={() => setSelectedUserItemId(item.user_item_id)}
                 >
                   {item.is_equipped && (
@@ -403,17 +206,21 @@ function InventoryPage() {
             Close
           </a>
 
-          {selectedItem && (
+          {selectedItem ? (
             <button
-              className={`equip-item-button ${
-                selectedItem.is_equipped ? "unequip" : ""
-              }`}
+              className="equip-item-button"
               type="button"
               onClick={handleToggleEquip}
             >
               {selectedItem.is_equipped ? "Unequip" : "Equip"}
             </button>
+          ) : (
+            <button className="equip-item-button" type="button" disabled>
+              No Item Selected
+            </button>
           )}
+
+          {errorMessage && <p className="inventory-error-message">{errorMessage}</p>}
         </footer>
       </section>
     </main>
