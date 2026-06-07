@@ -2,10 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 /* import { createPost } from "../api/postsApi"; */
 import { usePosts } from "../hooks/usePosts";
+/* import { checkPostAgainstQuests } from "../api/questsApi"; */
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useQuests } from "../hooks/useQuests";
 import "./WritePostPage.css";
 
 function WritePostPage() {
   const { addPost } = usePosts();
+  const { user, reloadUser } = useCurrentUser();
+  const { quests, checkPostForQuestCompletion, claimReward } = useQuests();  
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -27,7 +32,7 @@ function WritePostPage() {
       return;
     }
 
-    await addPost({
+    const newPost = await addPost({
       title,
       content,
       tag,
@@ -35,8 +40,15 @@ function WritePostPage() {
       visibility,
     });
 
+    await checkPostForQuestCompletion(newPost);
+
     alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 
+  }
+
+  async function handleClaimQuest(questId) {
+    await claimReward(questId);
+    await reloadUser();
   }
 
   return (
@@ -172,10 +184,49 @@ function WritePostPage() {
               <span>Estimated Will</span>
               <strong>↝ {estimatedWill}</strong>
             </div>
+
+            <div className="memory-stat-row">
+              <span>Current Will</span>
+              <strong>↝ {user ? user.will_balance : 0}</strong>
+            </div>
+          </section>
+
+          <section className="write-quest-card">
+            <h2>Today’s Quests</h2>
+
+            {quests.length === 0 ? (
+              <p className="write-quest-empty">No quests assigned.</p>
+            ) : (
+              <div className="write-quest-list">
+                {quests.map((quest) => (
+                  <article className="write-quest-item" key={quest.quest_id}>
+                    <div>
+                      <strong>{quest.title}</strong>
+                      <p>{quest.description}</p>
+                      <span className={`quest-status quest-status-${quest.status}`}>
+                        {quest.status}
+                      </span>
+                    </div>
+
+                    {quest.status === "completed" && (
+                      <button
+                        type="button"
+                        onClick={() => handleClaimQuest(quest.quest_id)}
+                      >
+                        Claim +{quest.reward_will}
+                      </button>
+                    )}
+
+                    {quest.status === "claimed" && <small>Reward claimed</small>}
+                  </article>
+                ))}
+              </div>
+            )}
           </section>
 
           <p className="memory-note">
-            Writing helps your egg<br />
+            Writing helps your egg
+            <br />
             grow stronger.
           </p>
         </aside>

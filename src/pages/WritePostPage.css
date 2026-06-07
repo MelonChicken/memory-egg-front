@@ -460,6 +460,111 @@
   line-height: 1.45;
 }
 
+.write-quest-card {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--write-card-bg);
+  border: 1px solid var(--write-card-border);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(73, 54, 41, 0.04);
+}
+
+.write-quest-card h2 {
+  margin: 0 0 1rem;
+  color: var(--write-accent-dark);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.write-quest-empty {
+  margin: 0;
+  color: var(--write-text-soft);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.write-quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.write-quest-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--write-card-border);
+}
+
+.write-quest-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.write-quest-item strong {
+  display: block;
+  color: var(--write-text);
+  font-size: 0.76rem;
+  line-height: 1.25;
+}
+
+.write-quest-item p {
+  margin: 0.25rem 0 0;
+  color: var(--write-text-soft);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.quest-status {
+  width: fit-content;
+  min-height: 18px;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.45rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: var(--write-toggle-bg);
+  color: var(--write-accent-dark);
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.quest-status-completed {
+  background: #f2e6cd;
+  color: #7a5a2f;
+}
+
+.quest-status-claimed {
+  background: #dcefd0;
+  color: #3e6a34;
+}
+
+.write-quest-item button {
+  min-height: 30px;
+  border: none;
+  border-radius: 999px;
+  background: var(--write-accent-dark);
+  color: var(--write-button-text);
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.write-quest-item button:hover {
+  background: var(--write-accent);
+}
+
+.write-quest-item small {
+  color: var(--write-text-soft);
+  font-size: 0.65rem;
+  font-style: italic;
+}
+
 /* Accessibility utility */
 
 .sr-only {
@@ -533,5 +638,13 @@
 
   .memory-note {
     margin-left: 0;
+  }
+
+  .write-quest-card {
+    margin-top: 1rem;
+  }
+
+  .write-quest-item button {
+    width: 100%;
   }
 }
