@@ -1,4 +1,8 @@
 import "./ProfilePage.css";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useEgg } from "../hooks/useEgg";
+import { usePosts } from "../hooks/usePosts";
+import { useQuests } from "../hooks/useQuests";
 
 function getTagClassName(tag) {
   const normalizedTag = tag?.toLowerCase();
@@ -14,7 +18,87 @@ function getTagClassName(tag) {
   return "tag-general";
 }
 
+function getDaysSince(dateString) {
+  if (!dateString) {
+    return 0;
+  }
+
+  const createdDate = new Date(dateString);
+  const today = new Date();
+
+  const differenceMs = today - createdDate;
+  const differenceDays = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
+  return Math.max(0, differenceDays);
+}
+
+function getTotalWords(posts) {
+  return posts.reduce((sum, post) => {
+    return sum + Number(post.word_count || 0);
+  }, 0);
+}
+
+function getCompletedQuestCount(quests) {
+  return quests.filter((quest) => {
+    return quest.status === "completed" || quest.status === "claimed";
+  }).length;
+}
+
+function getMostUsedTags(posts) {
+  const tagCounts = {};
+
+  posts.forEach((post) => {
+    if (!post.tag) {
+      return;
+    }
+
+    tagCounts[post.tag] = (tagCounts[post.tag] || 0) + 1;
+  });
+
+  return Object.entries(tagCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([tag]) => tag);
+}
+
+function getStatPercent(value) {
+  const numericValue = Number(value || 0);
+
+  return `${Math.min(100, Math.max(0, numericValue))}%`;
+}
+
 function ProfilePage() {
+  const { user, loading: userLoading } = useCurrentUser();
+  const { egg, loading: eggLoading } = useEgg();
+  const { posts, loading: postsLoading } = usePosts();
+  const { quests, loading: questsLoading } = useQuests();
+
+  const isLoading = userLoading || eggLoading || postsLoading || questsLoading;
+
+  if (isLoading) {
+    return (
+      <main className="app-page profile-page">
+        <section className="profile-layout">
+          <section className="profile-card">
+            <h1>Loading profile...</h1>
+          </section>
+        </section>
+      </main>
+    );
+  }
+
+  const nickname = user?.nickname || "Wanderer";
+  const daysSinceJoin = getDaysSince(user?.created_at);
+  const willBalance = Number(user?.will_balance || 0);
+
+  const totalWords = getTotalWords(posts);
+  const completedQuestCount = getCompletedQuestCount(quests);
+  const mostUsedTags = getMostUsedTags(posts);
+
+  const glow = Number(egg?.glow || 0);
+  const warmth = Number(egg?.warmth || 0);
+  const weight = Number(egg?.weight || 0);
+
   return (
     <main className="app-page profile-page">
       <header className="profile-header">
@@ -27,8 +111,8 @@ function ProfilePage() {
 
         <div className="profile-user">
           <div className="profile-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
+            <span>{nickname}</span>
+            <strong>{daysSinceJoin} Days</strong>
           </div>
           <div className="profile-avatar-small" aria-label="User profile placeholder" />
         </div>
@@ -38,22 +122,22 @@ function ProfilePage() {
         <section className="profile-card profile-hero-card">
           <div className="profile-avatar-large">
             <div className="profile-face" />
-            <span className="profile-level">Lv. 5</span>
+            <span className="profile-level">Lv. {egg?.stage || 1}</span>
           </div>
 
           <div className="profile-identity">
-            <h1>Wanderer</h1>
-            <p>Cultivating thoughts since October.</p>
+            <h1>{nickname}</h1>
+            <p>Cultivating thoughts through memories and care.</p>
 
-            <ul className="profile-badges" aria-label="Profile summary badges"> {/* Better for semantic */}
+            <ul className="profile-badges" aria-label="Profile summary badges">
               <li className="profile-badge">
-                <span>Streak</span>
-                <strong>↝ 14 days</strong>
+                <span>Days Since Join</span>
+                <strong>↝ {daysSinceJoin} days</strong>
               </li>
 
               <li className="profile-badge">
                 <span>Will Balance</span>
-                <strong>∞ 350 will</strong>
+                <strong>∞ {willBalance} will</strong>
               </li>
             </ul>
           </div>
@@ -64,7 +148,7 @@ function ProfilePage() {
             <article className="profile-card profile-total-words">
               <div>
                 <span className="profile-section-label">↝ Total Words Penned</span>
-                <strong>12,408</strong>
+                <strong>{totalWords.toLocaleString()}</strong>
               </div>
 
               <div className="profile-card-icon" aria-hidden="true">
@@ -75,13 +159,13 @@ function ProfilePage() {
             <div className="profile-mini-grid">
               <article className="profile-card profile-mini-card">
                 <span className="profile-section-label">Posts Written</span>
-                <strong>27</strong>
+                <strong>{posts.length}</strong>
                 <span className="profile-check">◎</span>
               </article>
 
               <article className="profile-card profile-mini-card">
                 <span className="profile-section-label">Quests Completed</span>
-                <strong>27</strong>
+                <strong>{completedQuestCount}</strong>
                 <span className="profile-check">◎</span>
               </article>
             </div>
@@ -89,13 +173,17 @@ function ProfilePage() {
             <article className="profile-card profile-tags-card">
               <span className="profile-section-label">Most Used Tags</span>
 
-              <ul className="profile-tags" aria-label="Most used tags">
-                {["food", "study", "reflection"].map((tag) => (
-                  <li key={tag} className={getTagClassName(tag)}>
-                    #{tag}
-                  </li>
-                ))}
-              </ul>
+              {mostUsedTags.length === 0 ? (
+                <p>No tags yet.</p>
+              ) : (
+                <ul className="profile-tags" aria-label="Most used tags">
+                  {mostUsedTags.map((tag) => (
+                    <li key={tag} className={getTagClassName(tag)}>
+                      #{tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </article>
           </section>
 
@@ -105,10 +193,10 @@ function ProfilePage() {
             <div className="resonance-stat">
               <div className="resonance-row">
                 <span>Glow</span>
-                <small>2.00</small>
+                <small>{glow}</small>
               </div>
               <div className="resonance-bar">
-                <span style={{ width: "72%" }} />
+                <span style={{ width: getStatPercent(glow) }} />
               </div>
               <p>Clarity of thought is increasing.</p>
             </div>
@@ -116,10 +204,10 @@ function ProfilePage() {
             <div className="resonance-stat">
               <div className="resonance-row">
                 <span>Warmth</span>
-                <small>1.29</small>
+                <small>{warmth}</small>
               </div>
               <div className="resonance-bar">
-                <span style={{ width: "45%" }} />
+                <span style={{ width: getStatPercent(warmth) }} />
               </div>
               <p>Emotional processing requires attention.</p>
             </div>
@@ -127,10 +215,10 @@ function ProfilePage() {
             <div className="resonance-stat">
               <div className="resonance-row">
                 <span>Weight</span>
-                <small>2.32</small>
+                <small>{weight}</small>
               </div>
               <div className="resonance-bar">
-                <span style={{ width: "85%" }} />
+                <span style={{ width: getStatPercent(weight) }} />
               </div>
               <p>A heavy accumulation of experiences.</p>
             </div>
