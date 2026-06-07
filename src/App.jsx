@@ -3,7 +3,6 @@
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/header.jsx";
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
@@ -15,20 +14,37 @@ import EggDashboardPage from "./pages/EggDashboardPage.jsx";
 import InventoryPage from "./pages/InventoryPage.jsx";
 import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-/*This App code is only temporary to test the header functionnality*/
-function App() {
+// 1. Create a wrapper component inside the Router context
+function AppContent() {
+  const location = useLocation();
+
+  // Define paths where you don't want the header
+  const hideHeaderPaths = ["/"]; 
+
   return (
-    <BrowserRouter>
-      <Header />
+    <>
+      {/* Only render Header if the current path isn't in the hide list */}
+      {!hideHeaderPaths.includes(location.pathname) && <Header />}
+      
       <main style={{ padding: "1rem" }}>
         <Routes>
-          <Route path="/" element={<EggDashboardPage />} />
+          <Route path="/" element={<ShopPage />} />
           <Route path="login" element={<LoginPage />} />
         </Routes>
       </main>
+    </>
+  );
+}
+
+// 2. Keep your main App component clean
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
 
-export default App;
+export default App
