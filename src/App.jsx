@@ -2,8 +2,6 @@
 // <div /> tests whether centered layout works.
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Header from "./components/header.jsx";
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
