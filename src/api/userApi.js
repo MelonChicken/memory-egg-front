@@ -30,6 +30,9 @@ function saveUserToStorage(user) {
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 }
 
+
+/* Exported API logic to be replaced by backend */
+
 export async function getCurrentUser() {
   return loadUserFromStorage();
 }
