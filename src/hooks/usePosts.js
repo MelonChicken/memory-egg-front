@@ -18,10 +18,15 @@ export function usePosts() {
 
   const addPost = useCallback(async (postData) => {
     const newPost = await createPost(postData);
+    const updatedPosts = await getAllPosts();
 
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
+    /*setPosts((prevPosts) => [newPost, ...prevPosts]);*/
+    setPosts(Array.isArray(updatedPosts) ? updatedPosts : []);
 
-    return newPost;
+    return {
+      newPost,
+      updatedPosts: Array.isArray(updatedPosts) ? updatedPosts : [],
+    };
   }, []);
 
   const removePost = useCallback(async (postId) => {

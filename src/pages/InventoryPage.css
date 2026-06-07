@@ -120,9 +120,10 @@
 }
 
 .inventory-window-header {
+  height: 72px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 0 2rem;
   border-bottom: 1px solid #ddd3c7;
 }
@@ -132,6 +133,7 @@
   font-family: var(--font-serif);
   font-size: 1.9rem;
   color: #6a5148;
+  line-height: 1;
 }
 
 .inventory-info-button {
@@ -304,7 +306,7 @@
 }
 
 .inventory-item-info strong {
-  display: inline-block;
+  display: block;
   color: #2f241f;
   font-size: 0.9rem;
 }
@@ -318,7 +320,7 @@
 }
 
 .inventory-item-description {
-  max-width: 170px;
+  max-width: 160px;
   margin: 0.25rem 0 0;
   color: #7c7167;
   font-size: 0.68rem;
@@ -376,6 +378,52 @@
 
 .equip-item-button.unequip:hover {
   background: #5a2b1e;
+}
+
+.inventory-empty-message,
+.inventory-error-message {
+  margin: 0;
+  padding: 0.8rem;
+  color: #7c7167;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.inventory-error-message {
+  color: #b34135;
+  font-weight: 800;
+}
+
+.equip-item-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.effect-label {
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.65rem;
+  border-radius: 999px;
+  background: #eadbd2;
+  color: #6a4c42;
+  font-size: 0.7rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.inventory-empty-message,
+.inventory-error-message {
+  margin: 0;
+  padding: 1rem;
+  color: #7c7167;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.inventory-error-message {
+  color: #b34135;
+  font-weight: 800;
 }
 
 /* Responsive */
@@ -497,8 +545,9 @@
 
   .inventory-item-info {
     min-height: auto;
-    display: block;
-    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
   }
 
   .inventory-item-info strong {
@@ -514,9 +563,6 @@
 
   .inventory-item-description {
     max-width: none;
-    margin: 0.3rem 0 0;
-    font-size: 0.72rem;
-    line-height: 1.35;
   }
 
   .inventory-footer {
@@ -528,5 +574,9 @@
     min-width: 96px;
     min-height: 40px;
     font-size: 0.76rem;
+  }
+
+  .effect-label {
+    justify-self: end;
   }
 }

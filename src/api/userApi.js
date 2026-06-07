@@ -4,7 +4,7 @@ const defaultUser = {
   user_id: 1,
   email: "demo@nacimiento.app",
   nickname: "Wanderer",
-  will_balance: 0,
+  will_balance: 999,
   created_at: new Date().toISOString(),
 };
 
@@ -42,7 +42,7 @@ export async function addWill(amount) {
 
   const updatedUser = {
     ...user,
-    will_balance: user.will_balance + amount,
+    will_balance: user.will_balance + Number(amount),
   };
 
   saveUserToStorage(updatedUser);
@@ -52,14 +52,15 @@ export async function addWill(amount) {
 
 export async function spendWill(amount) {
   const user = loadUserFromStorage();
+  const numericAmount = Number(amount);
 
-  if (user.will_balance < amount) {
+  if (user.will_balance < numericAmount) {
     throw new Error("Not enough Will.");
   }
 
   const updatedUser = {
     ...user,
-    will_balance: user.will_balance - amount,
+    will_balance: user.will_balance - numericAmount,
   };
 
   saveUserToStorage(updatedUser);
