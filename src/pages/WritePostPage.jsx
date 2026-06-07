@@ -32,7 +32,7 @@ function WritePostPage() {
       return;
     }
 
-    const { newPost, updatedPosts } = await addPost({
+    const { newPost } = await addPost({
       title,
       content,
       tag,
@@ -40,7 +40,7 @@ function WritePostPage() {
       visibility,
     });
 
-    /*await checkPostForQuestCompletion(newPost);*/
+    await checkPostForQuestCompletion(newPost);
 
     alert("Post created! Redirecting you to Archive Page");
     navigate("/archive"); 
