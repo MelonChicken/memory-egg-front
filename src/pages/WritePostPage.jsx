@@ -1,8 +1,44 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+/* import { createPost } from "../api/postsApi"; */
+import { usePosts } from "../hooks/usePosts";
 import "./WritePostPage.css";
 
 function WritePostPage() {
+  const { addPost } = usePosts();
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("reflection");
+  /*const [imageUrl, setImageUrl] = useState("");*/
   const [visibility, setVisibility] = useState("private");
+
+  const navigate = useNavigate();
+
+  {/*NOTE: LOGICS SHOULD BE IMPLEMENTED IN BACKEND. THESE ARE TEMPORARY PLACEHOLDERS */}
+  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const estimatedWill = Math.max(1, Math.floor(wordCount / 10));
+
+  async function handleSubmit(event) {
+    event.preventDefault(); /*Stop page from refreshing in form submit*/
+
+    if (!title.trim() || !content.trim()) {
+      alert("Please write both title and content.");
+      return;
+    }
+
+    await addPost({
+      title,
+      content,
+      tag,
+      image_url: null,
+      visibility,
+    });
+
+    alert("Post created! Redirecting you to Archive Page");
+    navigate("/archive"); 
+  }
+
   return (
     <main className={`app-page write-post-page visibility-${visibility}`}>
       <header className="write-header">
@@ -29,7 +65,7 @@ function WritePostPage() {
             <p>Take a moment to reflect and write.</p>
           </div>
 
-          <form className="write-form">
+          <form className="write-form" onSubmit={handleSubmit}>
             <section className="write-editor-card">
               <label className="write-title-label" htmlFor="post-title">
                 <span className="sr-only">Post title</span>
@@ -38,6 +74,8 @@ function WritePostPage() {
                   className="write-title-input"
                   type="text"
                   placeholder="A quiet morning..."
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
                 />
               </label>
 
@@ -47,6 +85,8 @@ function WritePostPage() {
                   id="post-body"
                   className="write-body-input"
                   placeholder="Start typing here..."
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
                 />
               </label>
 
@@ -56,6 +96,23 @@ function WritePostPage() {
                 <small>Drag and drop or enter URL</small>
               </button>
             </section>
+
+            <label className="write-tag-field">
+              <span>Memory Tag</span>
+
+              <div className="write-tag-select-wrap">
+                <select
+                  className="write-tag-select"
+                  value={tag}
+                  onChange={(event) => setTag(event.target.value)}
+                >
+                  <option value="reflection">Reflection</option>
+                  <option value="study">Study</option>
+                  <option value="food">Food</option>
+                  <option value="growth">Growth</option>
+                </select>
+              </div>
+            </label>
 
             <div className="write-bottom-bar">
               <fieldset className="visibility-toggle">
@@ -95,7 +152,7 @@ function WritePostPage() {
                 </label>
               </fieldset>
 
-              <button className="post-submit-button" type="button">
+              <button className="post-submit-button" type="submit">
                 Post
               </button>
             </div>
@@ -108,12 +165,12 @@ function WritePostPage() {
 
             <div className="memory-stat-row">
               <span>Word Count</span>
-              <strong>↝ 0</strong>
+              <strong>↝ {wordCount}</strong>
             </div>
 
             <div className="memory-stat-row">
               <span>Estimated Will</span>
-              <strong>↝ 0</strong>
+              <strong>↝ {estimatedWill}</strong>
             </div>
           </section>
 

@@ -1,304 +1,7 @@
 import { useState } from "react";
+import { usePosts } from "../hooks/usePosts";
 import "./MemoryArchivePage.css";
 
-/* This is just example of archivePosts. Also tests if post list scroll works finely. */
-const archivePosts = [
-  {
-    post_id: 1,
-    user_id: 1,
-    title: "Nov 2",
-    content:
-      "I'm studying Web Programming. This is so fun as I could create my imagination into something real.",
-    image_url: null,
-    tag: "study",
-    visibility: "private",
-    word_count: 128,
-    will_reward: 12,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 2,
-    user_id: 1,
-    title: "The Storm of chips",
-    content:
-      "I love potato chips. A bottle of Coca-cola goes well with this ngl.",
-    image_url:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80",
-    tag: "food",
-    visibility: "public",
-    word_count: 286,
-    will_reward: 18,
-    created_at: "2025-11-08",
-    updated_at: "2025-11-08",
-  },
-  {
-    post_id: 3,
-    user_id: 1,
-    title: "The First Crack",
-    content:
-      "This morning, I found a tiny crack on the surface of the egg. Is it a sign that my will is starting to take shape? I feel a swell of emotion in my heart. It feels real now. The weight of existence is shifting into something new.",
-    image_url: null,
-    tag: "growth",
-    visibility: "public",
-    word_count: 342,
-    will_reward: 50,
-    created_at: "2025-11-24",
-    updated_at: "2025-11-24",
-  },
-  {
-    post_id: 4,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 5,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 6,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 7,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 8,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 9,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 10,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 11,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 12,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 13,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 14,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 15,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 16,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 17,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 18,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 19,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 20,
-    user_id: 1,
-    title: "Example",
-    content:
-      "Welcome to the Nacimiento. This is driedoutjerky who's working on the frontend. It's my first time using React and actually feels quite similar to the html. I need to make css anyway.",
-    image_url: null,
-    tag: "reflection",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: "2025-11-02",
-    updated_at: "2025-11-02",
-  },
-  {
-    post_id: 21,
-    user_id: 1,
-    title: "Unknown Memory",
-    content:
-      "A memory waiting to be found. The page is still blank, but something about it feels familiar.",
-    image_url: null,
-    tag: "mystery",
-    visibility: "private",
-    word_count: 0,
-    will_reward: 0,
-    created_at: null,
-    updated_at: null,
-  },
-];
 
 function formatPostDate(dateString) {
   if (!dateString) {
@@ -387,7 +90,50 @@ function getTagClassName(tag) {
 
 
 function MemoryArchivePage() {
-  const [selectedPost, setSelectedPost] = useState(archivePosts[2]);
+  const { posts: archivePosts, loading, removePost } = usePosts();
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
+  const selectedPost =
+    archivePosts.find(
+      (post) => Number(post.post_id) === Number(selectedPostId)
+    ) ||
+    archivePosts[0] ||
+    null;
+
+  async function handleDeleteSelectedPost() {
+    const confirmed = window.confirm("Delete this memory?");
+
+    if (!confirmed || !selectedPost) {
+      return;
+    }
+
+    await removePost(selectedPost.post_id);
+    setSelectedPostId(null);
+  }
+
+  if (loading) {
+    return (
+      <main className="app-page memory-archive-page">
+        <p>Loading memories...</p>
+      </main>
+    );
+  }
+
+  if (archivePosts.length === 0 || !selectedPost) {
+    return (
+      <main className="app-page memory-archive-page">
+        <header className="archive-header">
+          <div className="archive-brand">Nacimiento</div>
+        </header>
+
+        <section className="archive-empty-state">
+          <h1>No memories yet</h1>
+          <p>Write your first notebook post to fill the archive.</p>
+          <a href="/write">Write a post</a>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="app-page memory-archive-page">
@@ -423,12 +169,16 @@ function MemoryArchivePage() {
             <a className="active" href="/archive">
               ▧ Main Shelf
             </a>
+
+            <a className="archive-write-link" href="/write">
+              ✎ Write Post
+            </a>
           </nav>
 
           <section className="archive-progress-card">
             <div className="archive-progress-icon">▥</div>
             <h2>Archive Progress</h2>
-            <p>20 memories found</p>
+            <p>{archivePosts.length} memories found</p>
           </section>
         </aside>
 
@@ -438,10 +188,10 @@ function MemoryArchivePage() {
               <button
                 key={post.post_id}
                 className={`archive-post-card ${
-                  selectedPost.post_id === post.post_id ? "selected" : ""
+                  Number(selectedPost?.post_id) === Number(post.post_id) ? "selected" : ""
                 }`}
                 type="button"
-                onClick={() => setSelectedPost(post)}
+                onClick={() => setSelectedPostId(post.post_id)}
               >
                 <div className="archive-post-image">
                   {post.image_url ? (
@@ -485,8 +235,12 @@ function MemoryArchivePage() {
           </div>
 
           <div className="preview-actions">
-            <a href={`/archive/${selectedPost.post_id}`}>⌕ View</a>
-            <button type="button" aria-label="Delete post">
+            <a href={`/posts/${selectedPost.post_id}`}>⌕ View</a>
+            <button
+              type="button"
+              aria-label="Delete post"
+              onClick={handleDeleteSelectedPost}
+            >
               ⌫
             </button>
           </div>
