@@ -7,9 +7,12 @@ import windowFrameImage from "../assets/windowframe.PNG";
 import windowBackgroundImage from "../assets/background.png";
 
 import { useEgg } from "../hooks/useEgg";
+import { useQuests } from "../hooks/useQuests";
 
 function EggDashboardPage() {
   const { egg, loading } = useEgg();
+  const { quests, loading: questsLoading } = useQuests();
+
   return (
     <main className="app-page egg-dashboard-page">
       <header className="dashboard-header">
@@ -105,20 +108,24 @@ function EggDashboardPage() {
               <section className="notebook-paper-content" aria-label="Today’s quests">
                 <h3>Today’s Quests</h3>
 
+              {questsLoading ? (
+                <p>Loading quests...</p>
+              ) : quests.length === 0 ? (
+                <p>No quests assigned.</p>
+              ) : (
                 <ul>
-                  <li>
-                    <input type="checkbox" readOnly />
-                    <span>Write 500+ words in total today</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" readOnly />
-                    <span>Write about what you studied</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" readOnly />
-                    <span>Upload one photo memory</span>
-                  </li>
+                  {quests.map((quest) => (
+                    <li key={quest.quest_id}>
+                      <input
+                        type="checkbox"
+                        readOnly
+                        checked={quest.status === "completed" || quest.status === "claimed"}
+                      />
+                      <span>{quest.title}</span>
+                    </li>
+                  ))}
                 </ul>
+              )}
               </section>
 
               <nav className="dashboard-actions" aria-label="Dashboard actions">
