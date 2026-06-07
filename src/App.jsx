@@ -2,6 +2,7 @@
 // <div /> tests whether centered layout works.
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Header from "./components/header.jsx";
 import OpeningPage from "./pages/OpeningPage.jsx";
@@ -21,7 +22,7 @@ function AppContent() {
   const location = useLocation();
 
   // Define paths where you don't want the header
-  const hideHeaderPaths = ["/"]; 
+  const hideHeaderPaths = ["/shop"]; 
 
   return (
     <>
@@ -30,8 +31,14 @@ function AppContent() {
       
       <main style={{ padding: "1rem" }}>
         <Routes>
-          <Route path="/" element={<ShopPage />} />
-          <Route path="login" element={<LoginPage />} />
+          <Route path="/" element={<EggDashboardPage />} />
+          <Route path="/write" element={<WritePostPage />} />
+          <Route path="/nest" element={<EggDashboardPage />} />
+          <Route path="/archive" element={<MemoryArchivePage />} />
+          <Route path="/posts/:id" element={<ViewPostPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </main>
     </>

@@ -1,8 +1,56 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+/* import { createPost } from "../api/postsApi"; */
+import { usePosts } from "../hooks/usePosts";
+/* import { checkPostAgainstQuests } from "../api/questsApi"; */
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useQuests } from "../hooks/useQuests";
 import "./WritePostPage.css";
 
 function WritePostPage() {
+  const { addPost } = usePosts();
+  const { user, reloadUser } = useCurrentUser();
+  const { quests, checkPostForQuestCompletion, claimReward } = useQuests();  
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("reflection");
+  /*const [imageUrl, setImageUrl] = useState("");*/
   const [visibility, setVisibility] = useState("private");
+
+  const navigate = useNavigate();
+
+  {/*NOTE: LOGICS SHOULD BE IMPLEMENTED IN BACKEND. THESE ARE TEMPORARY PLACEHOLDERS */}
+  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const estimatedWill = Math.max(1, Math.floor(wordCount / 10));
+
+  async function handleSubmit(event) {
+    event.preventDefault(); /*Stop page from refreshing in form submit*/
+
+    if (!title.trim() || !content.trim()) {
+      alert("Please write both title and content.");
+      return;
+    }
+
+    const { newPost, updatedPosts } = await addPost({
+      title,
+      content,
+      tag,
+      image_url: null,
+      visibility,
+    });
+
+    /*await checkPostForQuestCompletion(newPost);*/
+
+    alert("Post created! Redirecting you to Archive Page");
+    navigate("/archive"); 
+  }
+
+  async function handleClaimQuest(questId) {
+    await claimReward(questId);
+    await reloadUser();
+  }
+
   return (
     <main className={`app-page write-post-page visibility-${visibility}`}>
       <section className="write-layout">
@@ -12,7 +60,7 @@ function WritePostPage() {
             <p>Take a moment to reflect and write.</p>
           </div>
 
-          <form className="write-form">
+          <form className="write-form" onSubmit={handleSubmit}>
             <section className="write-editor-card">
               <label className="write-title-label" htmlFor="post-title">
                 <span className="sr-only">Post title</span>
@@ -21,6 +69,8 @@ function WritePostPage() {
                   className="write-title-input"
                   type="text"
                   placeholder="A quiet morning..."
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
                 />
               </label>
 
@@ -30,6 +80,8 @@ function WritePostPage() {
                   id="post-body"
                   className="write-body-input"
                   placeholder="Start typing here..."
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
                 />
               </label>
 
@@ -39,6 +91,23 @@ function WritePostPage() {
                 <small>Drag and drop or enter URL</small>
               </button>
             </section>
+
+            <label className="write-tag-field">
+              <span>Memory Tag</span>
+
+              <div className="write-tag-select-wrap">
+                <select
+                  className="write-tag-select"
+                  value={tag}
+                  onChange={(event) => setTag(event.target.value)}
+                >
+                  <option value="reflection">Reflection</option>
+                  <option value="study">Study</option>
+                  <option value="food">Food</option>
+                  <option value="growth">Growth</option>
+                </select>
+              </div>
+            </label>
 
             <div className="write-bottom-bar">
               <fieldset className="visibility-toggle">
@@ -78,7 +147,7 @@ function WritePostPage() {
                 </label>
               </fieldset>
 
-              <button className="post-submit-button" type="button">
+              <button className="post-submit-button" type="submit">
                 Post
               </button>
             </div>
@@ -91,17 +160,56 @@ function WritePostPage() {
 
             <div className="memory-stat-row">
               <span>Word Count</span>
-              <strong>↝ 0</strong>
+              <strong>↝ {wordCount}</strong>
             </div>
 
             <div className="memory-stat-row">
               <span>Estimated Will</span>
-              <strong>↝ 0</strong>
+              <strong>↝ {estimatedWill}</strong>
+            </div>
+
+            <div className="memory-stat-row">
+              <span>Current Will</span>
+              <strong>↝ {user ? user.will_balance : 0}</strong>
             </div>
           </section>
 
+          <section className="write-quest-card">
+            <h2>Today’s Quests</h2>
+
+            {quests.length === 0 ? (
+              <p className="write-quest-empty">No quests assigned.</p>
+            ) : (
+              <div className="write-quest-list">
+                {quests.map((quest) => (
+                  <article className="write-quest-item" key={quest.quest_id}>
+                    <div>
+                      <strong>{quest.title}</strong>
+                      <p>{quest.description}</p>
+                      <span className={`quest-status quest-status-${quest.status}`}>
+                        {quest.status}
+                      </span>
+                    </div>
+
+                    {quest.status === "completed" && (
+                      <button
+                        type="button"
+                        onClick={() => handleClaimQuest(quest.quest_id)}
+                      >
+                        Claim +{quest.reward_will}
+                      </button>
+                    )}
+
+                    {quest.status === "claimed" && <small>Reward claimed</small>}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
           <p className="memory-note">
-            Writing helps your egg<br />
+            Writing helps your egg
+            <br />
             grow stronger.
           </p>
         </aside>

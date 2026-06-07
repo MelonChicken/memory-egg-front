@@ -264,6 +264,103 @@
   transform: rotate(12deg);
   transform-origin: bottom center;
 }
+
+/* Egg stats */
+
+.dashboard-side-panel {
+  width: 430px;
+  justify-self: end;
+  align-self: start;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.egg-stats-card {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d9cfc1;
+  border-radius: 14px;
+  background: #fffdf8;
+  color: #2f241f;
+  box-shadow: 0 12px 28px rgba(72, 52, 38, 0.08);
+}
+
+.egg-stats-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.egg-stats-header span {
+  color: #6c5147;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.egg-stats-header strong {
+  font-family: var(--font-serif);
+  color: #4d342c;
+  font-size: 0.95rem;
+}
+
+.egg-stats-loading {
+  margin: 0;
+  color: #786a61;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+.egg-stat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.egg-stat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.egg-stat-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.egg-stat-label span {
+  color: #5f5249;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.egg-stat-label strong {
+  color: #2f241f;
+  font-size: 0.78rem;
+}
+
+.egg-stat-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eee8df;
+}
+
+.egg-stat-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #7a5f54;
+  transition: width 180ms ease;
+}
+
 /* Notebook */
 
 /*
@@ -310,10 +407,8 @@
 
 .dashboard-notebook {
   position: relative;
-  width: 430px;
+  width: 100%;
   min-height: 560px;
-  justify-self: end;
-  align-self: end;
   color: #fff8ef;
 }
 
@@ -513,8 +608,12 @@
     aspect-ratio: 1.9 / 1;
   }
 
-  .dashboard-notebook {
+  .dashboard-side-panel {
     width: 440px;
+  }
+
+  .dashboard-notebook {
+    width: 100%;
     min-height: 580px;
   }
 }
@@ -578,13 +677,15 @@
     max-width: 900px;
     aspect-ratio: 1.35 / 1;
   }
-
-  .dashboard-notebook {
+  .dashboard-side-panel {
     width: min(100%, 430px);
-    min-height: auto;
     justify-self: center;
     align-self: start;
-    /*border-radius: 24px;*/
+  }
+
+  .dashboard-notebook {
+    width: 100%;
+    min-height: auto;
   }
 
   .bookmark {
@@ -616,10 +717,13 @@
     aspect-ratio: 1.32 / 1;
   }
 
-  .dashboard-notebook {
+  .dashboard-side-panel {
     width: 410px;
+  }
+
+  .dashboard-notebook {
+    width: 100%;
     min-height: 500px;
-    align-self: end;
   }
 
   .quest-paper {
@@ -633,6 +737,43 @@
   }
 }
 
+@media (min-width: 681px) and (max-width: 1050px) {
+  .dashboard-side-panel {
+    width: min(100%, 900px);
+    display: grid;
+    grid-template-columns: 220px minmax(0, 430px);
+    align-items: start;
+    justify-content: center;
+    gap: 1.2rem;
+  }
+
+  .egg-stats-card {
+    min-height: 420px;
+    padding: 1.1rem;
+  }
+
+  .egg-stats-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .egg-stat-list {
+    gap: 1.15rem;
+  }
+
+  .egg-stat-row {
+    gap: 0.45rem;
+  }
+
+  .egg-stat-bar {
+    height: 10px;
+  }
+
+  .dashboard-notebook {
+    width: 100%;
+  }
+}
 
 @media (max-width: 680px) {
   .dashboard-header {
@@ -666,11 +807,13 @@
     --scene-drop: 72px;
   }
 
-  .dashboard-notebook {
+  .dashboard-side-panel {
     width: min(100%, 390px);
+  }
+
+  .dashboard-notebook {
+    width: 100%;
     min-height: auto;
-    justify-self: center;
-    align-self: start;
   }
 
   .notebook-title {

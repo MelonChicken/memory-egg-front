@@ -9,16 +9,24 @@
   box-sizing: border-box;
 }
 
-html { /*fill the screen with root page area*/
+html,
+body,
+#root {
   min-height: 100%;
 }
 
-body { /* Default page background, text color, font + removes browser margin. */
+body {
   min-height: 100%;
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
+}
+
+.app-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
 }
 
 button, 
