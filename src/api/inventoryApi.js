@@ -5,6 +5,63 @@ const TOKEN_STORAGE_KEY = "memory_egg_token";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
+const BACKEND_ASSET_KEY_MAP = {
+  "Crisp Autumn Background": "fall_bg",
+  "Green Field Background": "grass_bg",
+  "Night Street Background": "nightstreet_bg",
+
+  "Eternity In Moments Music": "eternity_in_moments",
+  "Gold Phenomenon Music": "gold_phenomenon",
+  "Mi Querido Music": "mi_querido",
+
+  Angelic: "angelic",
+  Beard: "beard",
+  "Dirty Boots": "dirty_boots",
+  "Flower Crown": "flower_crown",
+  Glasses: "glasses",
+  "Life Buoy": "life_buoy",
+  "On Fire": "on_fire",
+  "Spinning Hat": "spinning_hat",
+  "Top Hat": "top_hat",
+  "Work Overall": "work_overall",
+};
+
+function getAssetKeyFromBackendItem(item) {
+  if (item.asset_key) {
+    return item.asset_key;
+  }
+
+  if (BACKEND_ASSET_KEY_MAP[item.name]) {
+    return BACKEND_ASSET_KEY_MAP[item.name];
+  }
+
+  if (item.asset_url?.includes("fall-bg")) {
+    return "fall_bg";
+  }
+
+  if (item.asset_url?.includes("grass-bg")) {
+    return "grass_bg";
+  }
+
+  if (item.asset_url?.includes("nightstreet-bg")) {
+    return "nightstreet_bg";
+  }
+
+  if (item.asset_url?.includes("eternity-in-moments")) {
+    return "eternity_in_moments";
+  }
+
+  if (item.asset_url?.includes("gold-phenomenon")) {
+    return "gold_phenomenon";
+  }
+
+  if (item.asset_url?.includes("mi-querido")) {
+    return "mi_querido";
+  }
+
+  return item.name;
+}
+
 function getAuthToken() {
   return localStorage.getItem(TOKEN_STORAGE_KEY);
 }
@@ -90,13 +147,13 @@ function toDisplayName(assetKey) {
 }
 
 function normalizeShopItem(item) {
-  const assetKey = item.asset_key || item.name;
+  const assetKey = getAssetKeyFromBackendItem(item);
 
   return {
     ...item,
     item_id: item.item_id || item.id,
     id: item.id || item.item_id,
-    name: item.display_name || item.title || toDisplayName(assetKey),
+    name: item.display_name || item.title || item.name || toDisplayName(assetKey),
     item_type: normalizeItemType(item.item_type),
     asset_key: assetKey,
     price: item.price ?? item.price_will ?? 0,
