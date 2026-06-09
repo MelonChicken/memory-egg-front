@@ -70,5 +70,5 @@ export function getCosmeticAsset(cosmeticKey) {
 }
 
 export function getMusicAsset(musicKey) {
-  return musicAssets[musicKey] || musicAssets.eternity_in_moments;
+  return musicAssets[musicKey] || null;
 }

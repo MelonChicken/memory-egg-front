@@ -6,6 +6,8 @@ import {
   getCosmeticAsset,
 } from "../assets/assetRegistry";
 
+import { Link } from "react-router-dom";
+
 const shopCategories = [
   {
     id: "background",
@@ -112,9 +114,9 @@ function ShopPage() {
       <section className="shop-window" aria-label="Egg shop">
         <header className="shop-window-header">
           <h1>▦ Egg Shop</h1>
-          <a className="shop-return-link" href="/nest" aria-label="Return to egg">
+          <Link className="shop-return-link" to="/nest" aria-label="Return to egg">
             Return To Egg
-          </a>
+          </Link>
         </header>
 
         <div className="shop-content">
@@ -180,9 +182,9 @@ function ShopPage() {
         </div>
 
         <footer className="shop-footer">
-          <a className="shop-close-button" href="/nest">
+          <Link className="shop-close-button" to="/nest">
             Close
-          </a>
+          </Link>
 
           <div className="shop-footer-actions">
             {errorMessage && (

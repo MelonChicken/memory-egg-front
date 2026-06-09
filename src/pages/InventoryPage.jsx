@@ -5,6 +5,7 @@ import {
   getBackgroundAsset,
   getCosmeticAsset,
 } from "../assets/assetRegistry";
+import { Link } from "react-router-dom";
 
 import "./InventoryPage.css";
 
@@ -179,9 +180,9 @@ function InventoryPage() {
         </div>
 
         <footer className="inventory-footer">
-          <a className="inventory-close-button" href="/nest">
+          <Link className="inventory-close-button" to="/nest">
             Close
-          </a>
+          </Link>
 
           {selectedItem ? (
             <button

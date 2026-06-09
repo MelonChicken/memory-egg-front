@@ -2,7 +2,7 @@
 // <div /> tests whether centered layout works.
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, Outlet } from "react-router-dom";
 import { isAuthenticated } from "./api/userApi";
 
 import OpeningPage from "./pages/OpeningPage.jsx";
@@ -17,6 +17,7 @@ import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
 import Header from "./components/header.jsx";
+import MusicPlayer from "./components/MusicPlayer.jsx";
 
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) {
@@ -41,6 +42,20 @@ function PublicOnlyRoute({ children }) {
   }
 
   return children;
+}
+
+function ProtectedLayout() {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <>
+      <Header />
+      <Outlet />
+      <MusicPlayer />
+    </>
+  );
 }
 
 function App() {
@@ -74,62 +89,15 @@ function App() {
           }
         />
 
-        <Route
-          path="/nest"
-          element={
-            <ProtectedPage>
-              <EggDashboardPage />
-            </ProtectedPage>
-          }
-        />
-        <Route
-          path="/write"
-          element={
-            <ProtectedPage>
-              <WritePostPage />
-            </ProtectedPage>
-          }
-        />
-        <Route
-          path="/archive"
-          element={
-            <ProtectedPage>
-              <MemoryArchivePage />
-            </ProtectedPage>
-          }
-        />
-        <Route
-          path="/posts/:id"
-          element={
-            <ProtectedPage>
-              <ViewPostPage />
-            </ProtectedPage>
-          }
-        />
-        <Route
-          path="/shop"
-          element={
-            <ProtectedPage>
-              <ShopPage />
-            </ProtectedPage>
-          }
-        />
-        <Route
-          path="/inventory"
-          element={
-            <ProtectedPage>
-              <InventoryPage />
-            </ProtectedPage>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedPage>
-              <ProfilePage />
-            </ProtectedPage>
-          }
-        />
+        <Route element={<ProtectedLayout />}>
+          <Route path="/nest" element={<EggDashboardPage />} />
+          <Route path="/write" element={<WritePostPage />} />
+          <Route path="/archive" element={<MemoryArchivePage />} />
+          <Route path="/posts/:id" element={<ViewPostPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

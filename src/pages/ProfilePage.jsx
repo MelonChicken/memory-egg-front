@@ -4,6 +4,8 @@ import { useEgg } from "../hooks/useEgg";
 import { usePosts } from "../hooks/usePosts";
 import { useQuests } from "../hooks/useQuests";
 
+import { Link } from "react-router-dom";
+
 function getTagClassName(tag) {
   const normalizedTag = tag?.toLowerCase();
 
@@ -214,9 +216,9 @@ function ProfilePage() {
         </section>
 
         <div className="profile-return-row">
-          <a className="profile-return-button" href="/nest">
+          <Link className="profile-return-button" to="/nest">
             ← Return to Egg
-          </a>
+          </Link>
         </div>
       </section>
     </main>

@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { usePosts } from "../hooks/usePosts";
 import "./ViewPostPage.css";
 
+import { Link } from "react-router-dom";
+
 function ViewPostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ function ViewPostPage() {
     return (
       <main className="app-page view-post-page">
         <p>Post not found.</p>
-        <a href="/archive">← Back to Archive</a>
+        <Link to="/archive">← Back to Archive</Link>
       </main>
     );
   }
@@ -82,9 +84,9 @@ function ViewPostPage() {
     <main className="app-page view-post-page">
 
       <section className="view-post-layout">
-        <a className="back-to-archive" href="/archive">
+        <Link className="back-to-archive" to="/archive">
           ← Back to Archive
-        </a>
+        </Link>
 
         <article className="post-detail-card">
           <header className="post-detail-header">

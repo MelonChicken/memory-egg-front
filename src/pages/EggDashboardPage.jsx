@@ -7,6 +7,7 @@ import {
   getBackgroundAsset,
   getCosmeticAsset,
 } from "../assets/assetRegistry";
+import { Link } from "react-router-dom";
 
 function EggDashboardPage() {
   const { egg, loading } = useEgg();
@@ -132,10 +133,10 @@ function EggDashboardPage() {
               </section>
 
               <nav className="dashboard-actions" aria-label="Dashboard actions">
-                <a href="/write">Write Post</a>
-                <a href="/shop">Shop</a>
-                <a href="/archive">Archive</a>
-                <a href="/inventory">Inventory</a>
+                <Link to="/write">Write Post</Link>
+                <Link to="/shop">Shop</Link>
+                <Link to="/archive">Archive</Link>
+                <Link to="/inventory">Inventory</Link>
               </nav>
             </div>
           </section>
