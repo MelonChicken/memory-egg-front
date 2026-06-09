@@ -1,6 +1,45 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../api/userApi";
 import "./LoginPage.css";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (submitting) {
+      return;
+    }
+
+    setErrorMessage("");
+
+    if (!email.trim() || !password.trim()) {
+      setErrorMessage("Please enter both email and password.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await loginUser({
+        email,
+        password,
+      });
+
+      navigate("/nest");
+    } catch (error) {
+      setErrorMessage(error.message || "Failed to log in.");
+      setSubmitting(false);
+    }
+  }
+
   return (
     <main className="app-page login-page">
       <section className="login-intro" aria-labelledby="login-intro-title">
@@ -16,15 +55,27 @@ function LoginPage() {
           Nacimiento
         </h1>
 
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleSubmit}>
           <label className="login-field">
-            <span>ID</span>
-            <input type="text" name="userId" placeholder="Type in your ID" />
+            <span>Email</span>
+            <input
+              type="email"
+              name="email"
+              placeholder="Type in your email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
           </label>
 
           <label className="login-field">
             <span>Secret Password</span>
-            <input type="password" name="password" placeholder="••••••••" />
+            <input
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
           </label>
 
           <p className="login-subtitle">
@@ -32,8 +83,12 @@ function LoginPage() {
             waiting.”
           </p>
 
-          <button className="login-submit" type="button">
-            Sign In
+          {errorMessage && (
+            <p className="login-error-message">{errorMessage}</p>
+          )}
+
+          <button className="login-submit" type="submit" disabled={submitting}>
+            {submitting ? "Signing In..." : "Sign In"}
           </button>
         </form>
 

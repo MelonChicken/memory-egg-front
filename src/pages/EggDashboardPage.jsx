@@ -1,26 +1,36 @@
 import "./EggDashboardPage.css";
 
-import eggImage from "../assets/egg.PNG";
-import nestImage from "../assets/nest.PNG";
-import notebookImage from "../assets/notebook.PNG";
-import windowFrameImage from "../assets/windowframe.PNG";
-import windowBackgroundImage from "../assets/background.png";
-
 import { useEgg } from "../hooks/useEgg";
+import { useQuests } from "../hooks/useQuests";
+import {
+  baseAssets,
+  getBackgroundAsset,
+  getCosmeticAsset,
+} from "../assets/assetRegistry";
+import { Link } from "react-router-dom";
 
 function EggDashboardPage() {
   const { egg, loading } = useEgg();
+  const { quests, loading: questsLoading } = useQuests();
+
+  const equippedCosmeticKey = egg?.equipped_cosmetic || egg?.equippedCosmetic || null;
+  const equippedCosmeticImage = equippedCosmeticKey
+    ? getCosmeticAsset(equippedCosmeticKey)
+    : null;
+  const equippedBackgroundKey = egg?.equipped_background || egg?.equippedBackground || "default";
+  const equippedBackgroundImage = getBackgroundAsset(equippedBackgroundKey);
+
   return (
     <main className="app-page egg-dashboard-page">
       <section className="dashboard-content">
         <section className="window-area" aria-label="Egg window scene placeholder">
           <div
             className="window-frame"
-            style={{ "--window-frame-image": `url(${windowFrameImage})` }}
+            style={{ "--window-frame-image": `url(${baseAssets.windowFrame})` }}
           >
             <div
               className="window-view"
-              style={{ "--window-background-image": `url(${windowBackgroundImage})` }}
+              style={{ "--window-background-image": `url(${equippedBackgroundImage})` }}
             >
               <div className="window-sill" />
             </div>
@@ -28,11 +38,20 @@ function EggDashboardPage() {
             <div className="scene-layer">
               <div className="scene-group">
                 <div className="scene-art scene-nest">
-                  <img src={nestImage} alt="Nest" />
+                  <img src={baseAssets.nest} alt="Nest" />
                 </div>
 
                 <div className="scene-art scene-egg">
-                  <img src={eggImage} alt="Egg" />
+                  <img src={baseAssets.egg} alt="Egg" />
+
+                  {equippedCosmeticImage && (
+                    <img
+                      src={equippedCosmeticImage}
+                      alt=""
+                      aria-hidden="true"
+                      className="scene-cosmetic"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -86,34 +105,38 @@ function EggDashboardPage() {
           <section className="dashboard-notebook">
             <div
               className="notebook-shell"
-              style={{ "--notebook-image": `url(${notebookImage})` }}
+              style={{ "--notebook-image": `url(${baseAssets.notebook})` }}
             >
               <h2 className="notebook-title">My Notebook</h2>
 
               <section className="notebook-paper-content" aria-label="Today’s quests">
                 <h3>Today’s Quests</h3>
 
+              {questsLoading ? (
+                <p>Loading quests...</p>
+              ) : quests.length === 0 ? (
+                <p>No quests assigned.</p>
+              ) : (
                 <ul>
-                  <li>
-                    <input type="checkbox" readOnly />
-                    <span>Write 500+ words in total today</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" readOnly />
-                    <span>Write about what you studied</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" readOnly />
-                    <span>Upload one photo memory</span>
-                  </li>
+                  {quests.map((quest) => (
+                    <li key={quest.quest_id}>
+                      <input
+                        type="checkbox"
+                        readOnly
+                        checked={quest.status === "completed" || quest.status === "claimed"}
+                      />
+                      <span>{quest.title}</span>
+                    </li>
+                  ))}
                 </ul>
+              )}
               </section>
 
               <nav className="dashboard-actions" aria-label="Dashboard actions">
-                <a href="/write">Write Post</a>
-                <a href="/shop">Shop</a>
-                <a href="/archive">Archive</a>
-                <a href="/inventory">Inventory</a>
+                <Link to="/write">Write Post</Link>
+                <Link to="/shop">Shop</Link>
+                <Link to="/archive">Archive</Link>
+                <Link to="/inventory">Inventory</Link>
               </nav>
             </div>
           </section>

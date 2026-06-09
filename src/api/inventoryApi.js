@@ -1,6 +1,85 @@
 const USER_ITEMS_STORAGE_KEY = "memory_egg_user_items";
 const USER_ID = 1;
 
+const TOKEN_STORAGE_KEY = "memory_egg_token";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+const BACKEND_ASSET_KEY_MAP = {
+  "Crisp Autumn Background": "fall_bg",
+  "Green Field Background": "grass_bg",
+  "Night Street Background": "nightstreet_bg",
+
+  "Eternity In Moments Music": "eternity_in_moments",
+  "Gold Phenomenon Music": "gold_phenomenon",
+  "Mi Querido Music": "mi_querido",
+
+  Angelic: "angelic",
+  Beard: "beard",
+  "Dirty Boots": "dirty_boots",
+  "Flower Crown": "flower_crown",
+  Glasses: "glasses",
+  "Life Buoy": "life_buoy",
+  "On Fire": "on_fire",
+  "Spinning Hat": "spinning_hat",
+  "Top Hat": "top_hat",
+  "Work Overall": "work_overall",
+};
+
+function getAssetKeyFromBackendItem(item) {
+  if (item.asset_key) {
+    return item.asset_key;
+  }
+
+  if (BACKEND_ASSET_KEY_MAP[item.name]) {
+    return BACKEND_ASSET_KEY_MAP[item.name];
+  }
+
+  if (item.asset_url?.includes("fall-bg")) {
+    return "fall_bg";
+  }
+
+  if (item.asset_url?.includes("grass-bg")) {
+    return "grass_bg";
+  }
+
+  if (item.asset_url?.includes("nightstreet-bg")) {
+    return "nightstreet_bg";
+  }
+
+  if (item.asset_url?.includes("eternity-in-moments")) {
+    return "eternity_in_moments";
+  }
+
+  if (item.asset_url?.includes("gold-phenomenon")) {
+    return "gold_phenomenon";
+  }
+
+  if (item.asset_url?.includes("mi-querido")) {
+    return "mi_querido";
+  }
+
+  return item.name;
+}
+
+function getAuthToken() {
+  return localStorage.getItem(TOKEN_STORAGE_KEY);
+}
+
+function shouldUseBackend() {
+  return Boolean(getAuthToken());
+}
+
+function getAuthHeaders() {
+  const token = getAuthToken();
+
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+
 function loadUserItemsFromStorage() {
   const savedUserItems = localStorage.getItem(USER_ITEMS_STORAGE_KEY);
 
@@ -23,6 +102,117 @@ function saveUserItemsToStorage(userItems) {
   localStorage.setItem(USER_ITEMS_STORAGE_KEY, JSON.stringify(userItems));
 }
 
+// BACKEND INTEGRATION
+
+async function loadInventoryFromBackend() {
+  const response = await fetch(`${API_BASE_URL}/auth/me/inventory`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || data?.message || "Failed to load inventory.");
+  }
+
+  const userItems = Array.isArray(data?.userItems) ? data.userItems : [];
+  const items = Array.isArray(data?.items) ? data.items : [];
+
+  return {
+    userItems: userItems.map(normalizeUserItem),
+    items: items.map(normalizeShopItem),
+  };
+}
+
+
+// Helper function
+function normalizeItemType(itemType) {
+  if (itemType === "cosmetic") {
+    return "decoration";
+  }
+
+  return itemType;
+}
+
+function toDisplayName(assetKey) {
+  if (!assetKey) {
+    return "Unknown Item";
+  }
+
+  return assetKey
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function normalizeShopItem(item) {
+  const assetKey = getAssetKeyFromBackendItem(item);
+
+  return {
+    ...item,
+    item_id: item.item_id || item.id,
+    id: item.id || item.item_id,
+    name: item.display_name || item.title || item.name || toDisplayName(assetKey),
+    item_type: normalizeItemType(item.item_type),
+    asset_key: assetKey,
+    price: item.price ?? item.price_will ?? 0,
+    is_active: item.is_active === true || item.is_active === 1,
+  };
+}
+
+function normalizeUserItem(userItem) {
+  return {
+    ...userItem,
+    user_item_id: userItem.user_item_id || userItem.id,
+    id: userItem.id || userItem.user_item_id,
+    item_id: userItem.item_id,
+    quantity: userItem.quantity ?? 1,
+    is_equipped:
+      userItem.is_equipped === true ||
+      userItem.is_equipped === 1 ||
+      userItem.equipped === true,
+  };
+}
+
+async function equipItemOnBackend(itemId) {
+  const response = await fetch(`${API_BASE_URL}/egg/equip`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      item_id: itemId,
+    }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || data?.message || "Failed to equip item.");
+  }
+
+  return data;
+}
+
+async function unequipItemOnBackend(itemId) {
+  const response = await fetch(`${API_BASE_URL}/egg/unequip`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      item_id: itemId,
+    }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || data?.message || "Failed to unequip item.");
+  }
+
+  return data;
+}
+
+//
+
 function buildInventoryView(userItem, shopItem) {
   return {
     user_item_id: userItem.user_item_id,
@@ -38,18 +228,42 @@ function buildInventoryView(userItem, shopItem) {
     price: shopItem.price,
     effect_type: shopItem.effect_type,
     effect_value: shopItem.effect_value,
+    asset_key: shopItem.asset_key,
     asset_url: shopItem.asset_url,
     is_active: shopItem.is_active,
   };
 }
 
-/* exported api logics*/
+// exported api logics
 
 export async function getUserItems() {
+  if (shouldUseBackend()) {
+    const inventory = await loadInventoryFromBackend();
+    return inventory.userItems;
+  }
+
   return loadUserItemsFromStorage();
 }
 
 export async function getInventoryItems(shopItems) {
+  if (shouldUseBackend()) {
+    const inventory = await loadInventoryFromBackend();
+
+    return inventory.userItems
+      .map((userItem) => {
+        const matchingShopItem = inventory.items.find(
+          (item) => Number(item.item_id) === Number(userItem.item_id)
+        );
+
+        if (!matchingShopItem) {
+          return null;
+        }
+
+        return buildInventoryView(userItem, matchingShopItem);
+      })
+      .filter(Boolean);
+  }
+
   const userItems = loadUserItemsFromStorage();
 
   return userItems
@@ -108,6 +322,25 @@ export async function addUserItem(itemId) {
 }
 
 export async function equipUserItem(userItemId, shopItems) {
+  if (shouldUseBackend()) {
+    const inventory = await loadInventoryFromBackend();
+
+    const selectedUserItem = inventory.userItems.find(
+      (userItem) => Number(userItem.user_item_id) === Number(userItemId)
+    );
+
+    if (!selectedUserItem) {
+      throw new Error("Inventory item not found.");
+    }
+
+    await equipItemOnBackend(selectedUserItem.item_id);
+
+    const updatedInventory = await loadInventoryFromBackend();
+
+    return updatedInventory.userItems;
+  }
+
+
   const userItems = loadUserItemsFromStorage();
 
   const selectedUserItem = userItems.find(
@@ -150,6 +383,24 @@ export async function equipUserItem(userItemId, shopItems) {
 }
 
 export async function unequipUserItem(userItemId) {
+  if (shouldUseBackend()) {
+    const inventory = await loadInventoryFromBackend();
+
+    const selectedUserItem = inventory.userItems.find(
+      (userItem) => Number(userItem.user_item_id) === Number(userItemId)
+    );
+
+    if (!selectedUserItem) {
+      throw new Error("Inventory item not found.");
+    }
+
+    await unequipItemOnBackend(selectedUserItem.item_id);
+
+    const updatedInventory = await loadInventoryFromBackend();
+
+    return updatedInventory.userItems;
+  }
+
   const userItems = loadUserItemsFromStorage();
 
   const updatedUserItems = userItems.map((userItem) => {
