@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-/* import { createPost } from "../api/postsApi"; */
 import { usePosts } from "../hooks/usePosts";
-/* import { checkPostAgainstQuests } from "../api/questsApi"; */
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useQuests } from "../hooks/useQuests";
+import { doesPostLikelySatisfyQuest } from "../utils/questMatching";
 import "./WritePostPage.css";
 
 function WritePostPage() {
   const { addPost } = usePosts();
   const { user, reloadUser } = useCurrentUser();
-  const { quests, checkPostForQuestCompletion, claimReward } = useQuests();  
+  const { quests, claimQuestForPost } = useQuests(); 
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -25,30 +24,46 @@ function WritePostPage() {
   const estimatedWill = Math.max(1, Math.floor(wordCount / 10));
 
   async function handleSubmit(event) {
-    event.preventDefault(); /*Stop page from refreshing in form submit*/
+    event.preventDefault();
 
     if (!title.trim() || !content.trim()) {
       alert("Please write both title and content.");
       return;
     }
 
-    const { newPost } = await addPost({
-      title,
-      content,
-      tag,
-      image_url: null,
-      visibility,
-    });
+    try {
+      const { newPost } = await addPost({
+        title,
+        content,
+        tag,
+        image_url: null,
+        visibility,
+      });
 
-    await checkPostForQuestCompletion(newPost);
+      const postId = newPost.id || newPost.post_id;
 
-    alert("Post created! Redirecting you to Archive Page");
-    navigate("/archive"); 
-  }
+      const matchingQuests = quests.filter((quest) =>
+        doesPostLikelySatisfyQuest(newPost, quest)
+      );
 
-  async function handleClaimQuest(questId) {
-    await claimReward(questId);
-    await reloadUser();
+      for (const quest of matchingQuests) {
+        try {
+          await claimQuestForPost({
+            userQuestId: quest.user_quest_id,
+            postId,
+          });
+        } catch (claimError) {
+          console.warn("Quest claim failed:", claimError);
+        }
+      }
+
+      await reloadUser();
+
+      alert("Post created! Redirecting you to Archive Page");
+      navigate("/archive");
+    } catch (error) {
+      alert(error.message || "Failed to create post.");
+    }
   }
 
   return (
@@ -207,7 +222,7 @@ function WritePostPage() {
                         {quest.status}
                       </span>
                     </div>
-
+                    {/* REMOVED: quest completion is automated. 
                     {quest.status === "completed" && (
                       <button
                         type="button"
@@ -216,7 +231,7 @@ function WritePostPage() {
                         Claim +{quest.reward_will}
                       </button>
                     )}
-
+                    */}
                     {quest.status === "claimed" && <small>Reward claimed</small>}
                   </article>
                 ))}
