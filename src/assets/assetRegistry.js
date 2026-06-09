@@ -4,6 +4,7 @@ import defaultNest from "./nest.PNG";
 import notebook from "./notebook.PNG";
 import windowFrame from "./windowframe.PNG";
 
+import defaultBg from "./background/default-bg.jpg";
 import fallBackground from "./background/fall-bg.PNG";
 import grassBackground from "./background/grass-bg.PNG";
 import nightStreetBackground from "./background/nightstreet-bg.png";
@@ -36,7 +37,7 @@ export const baseAssets = {
 };
 
 export const backgroundAssets = {
-  default: defaultBackground,
+  default: defaultBg,
   fall_bg: fallBackground,
   grass_bg: grassBackground,
   nightstreet_bg: nightStreetBackground,
