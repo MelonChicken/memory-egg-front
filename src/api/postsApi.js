@@ -149,7 +149,7 @@ export async function getPostById(postId) {
     throw new Error(data?.error || data?.message || "Failed to load post.");
   }
 
-  return normalizePost(data);
+  return normalizePost(data.post || data);
 }
 
 export async function createPost(postData) {

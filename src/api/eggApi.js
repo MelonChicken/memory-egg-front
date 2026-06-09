@@ -48,35 +48,6 @@ function saveEggToStorage(egg) {
   localStorage.setItem(EGG_STORAGE_KEY, JSON.stringify(egg));
 }
 
-function getEmptyStats() {
-  return {
-    glow: 0,
-    warmth: 0,
-    weight: 0,
-  };
-}
-
-function getDecorationStats(decorationItem) {
-  const stats = getEmptyStats();
-
-  if (!decorationItem || decorationItem.item_type !== "decoration") {
-    return stats;
-  }
-
-  if (!decorationItem.effect_type || !decorationItem.effect_value) {
-    return stats;
-  }
-
-  if (!Object.hasOwn(stats, decorationItem.effect_type)) {
-    return stats;
-  }
-
-  return {
-    ...stats,
-    [decorationItem.effect_type]: Number(decorationItem.effect_value),
-  };
-}
-
 function findEquippedItemByType(inventoryItems, itemType) {
   return inventoryItems.find(
     (item) => item.item_type === itemType && item.is_equipped
@@ -96,7 +67,7 @@ export async function getEgg() {
 }
 
 export async function recalculateEggFromInventory(inventoryItems) {
-  const egg = loadEggFromStorage();
+  const currentEgg = loadEggFromStorage();
 
   const equippedBackground = findEquippedItemByType(
     inventoryItems,
@@ -108,24 +79,53 @@ export async function recalculateEggFromInventory(inventoryItems) {
     "decoration"
   );
 
-  const decorationStats = getDecorationStats(equippedDecoration);
+  const bonusStats = inventoryItems.reduce(
+    (totals, item) => {
+      if (!item.is_equipped || !item.effect_type || item.effect_value == null) {
+        return totals;
+      }
+
+      const effectValue = Number(item.effect_value);
+
+      if (Number.isNaN(effectValue)) {
+        return totals;
+      }
+
+      if (!["glow", "warmth", "weight"].includes(item.effect_type)) {
+        return totals;
+      }
+
+      return {
+        ...totals,
+        [item.effect_type]: totals[item.effect_type] + effectValue,
+      };
+    },
+    {
+      glow: 0,
+      warmth: 0,
+      weight: 0,
+    }
+  );
+
+  const baseGlow = currentEgg.base_glow ?? currentEgg.glow ?? 0;
+  const baseWarmth = currentEgg.base_warmth ?? currentEgg.warmth ?? 0;
+  const baseWeight = currentEgg.base_weight ?? currentEgg.weight ?? 0;
+
 
   const updatedEgg = {
-    ...egg,
-    stage: 1,
-    glow: decorationStats.glow,
-    warmth: decorationStats.warmth,
-    weight: decorationStats.weight,
+    ...currentEgg,
 
-    active_background_id: equippedBackground?.item_id ?? null,
-    active_music_id: equippedMusic?.item_id ?? null,
-    active_decoration_id: equippedDecoration?.item_id ?? null,
+    base_glow: baseGlow,
+    base_warmth: baseWarmth,
+    base_weight: baseWeight,
+
+    glow: Math.min(100, baseGlow + bonusStats.glow),
+    warmth: Math.min(100, baseWarmth + bonusStats.warmth),
+    weight: Math.min(100, baseWeight + bonusStats.weight),
 
     equipped_background: equippedBackground?.asset_key || "default",
     selected_music: equippedMusic?.asset_key || null,
     equipped_cosmetic: equippedDecoration?.asset_key || null,
-
-    updated_at: new Date().toISOString(),
   };
 
   saveEggToStorage(updatedEgg);
