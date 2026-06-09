@@ -106,22 +106,6 @@ function InventoryPage() {
 
   return (
     <main className="app-page inventory-page">
-      <header className="inventory-header">
-        <div className="inventory-brand">Nacimiento</div>
-
-        <nav className="inventory-nav" aria-label="Main navigation">
-          <a href="/nest">⌂ Nest</a>
-          <a href="/shop">▣ Shop</a>
-        </nav>
-
-        <div className="inventory-user">
-          <div className="inventory-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
-          </div>
-          <div className="inventory-avatar" aria-label="User profile placeholder" />
-        </div>
-      </header>
 
       <section className="inventory-window" aria-label="Inventory">
         <header className="inventory-window-header">

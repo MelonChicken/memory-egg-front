@@ -137,23 +137,6 @@ function MemoryArchivePage() {
 
   return (
     <main className="app-page memory-archive-page">
-      <header className="archive-header">
-        <div className="archive-brand">Nacimiento</div>
-
-        <nav className="archive-nav" aria-label="Main navigation">
-          <a href="/nest">⌂ Nest</a>
-          <a href="/shop">▣ Shop</a>
-        </nav>
-
-        <div className="archive-user">
-          <div className="archive-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
-          </div>
-          <div className="archive-avatar" aria-label="User profile placeholder" />
-        </div>
-      </header>
-
       <section className="archive-layout">
         <aside className="archive-sidebar">
           <div className="archive-title-block">
