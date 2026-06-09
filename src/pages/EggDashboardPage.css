@@ -250,11 +250,6 @@
   transform-origin: bottom right;
 }
 
-.scene-egg img {
-  transform: scale(2);
-  transform-origin: bottom right;
-}
-
 .scene-egg {
   right: 480px;
   bottom: 50px;
@@ -263,6 +258,35 @@
   z-index: 6;
   transform: rotate(12deg);
   transform-origin: bottom center;
+  position: absolute;
+}
+
+.scene-egg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.scene-egg > img:first-child {
+  position: relative;
+  z-index: 1;
+  transform: scale(2);
+  transform-origin: bottom right;
+}
+
+.scene-cosmetic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 2;
+  transform: scale(2);
+  transform-origin: bottom right;
 }
 
 /* Egg stats */

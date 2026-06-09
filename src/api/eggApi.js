@@ -7,9 +7,15 @@ const defaultEgg = {
   glow: 0,
   warmth: 0,
   weight: 0,
+
   active_background_id: null,
   active_music_id: null,
   active_decoration_id: null,
+
+  equipped_background: "default",
+  selected_music: null,
+  equipped_cosmetic: "flower_crown",
+
   updated_at: new Date().toISOString(),
 };
 
@@ -99,9 +105,15 @@ export async function recalculateEggFromInventory(inventoryItems) {
     glow: decorationStats.glow,
     warmth: decorationStats.warmth,
     weight: decorationStats.weight,
+
     active_background_id: equippedBackground?.item_id ?? null,
     active_music_id: equippedMusic?.item_id ?? null,
     active_decoration_id: equippedDecoration?.item_id ?? null,
+
+    equipped_background: equippedBackground?.asset_key || "default",
+    selected_music: equippedMusic?.asset_key || null,
+    equipped_cosmetic: equippedDecoration?.asset_key || null,
+
     updated_at: new Date().toISOString(),
   };
 

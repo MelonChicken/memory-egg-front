@@ -1,17 +1,15 @@
 import "./EggDashboardPage.css";
 
-import eggImage from "../assets/egg.PNG";
-import nestImage from "../assets/nest.PNG";
-import notebookImage from "../assets/notebook.PNG";
-import windowFrameImage from "../assets/windowframe.PNG";
-import windowBackgroundImage from "../assets/background.png";
-
 import { useEgg } from "../hooks/useEgg";
 import { useQuests } from "../hooks/useQuests";
+import { baseAssets, getCosmeticAsset } from "../assets/assetRegistry";
 
 function EggDashboardPage() {
   const { egg, loading } = useEgg();
   const { quests, loading: questsLoading } = useQuests();
+
+  const equippedCosmeticKey = egg?.equipped_cosmetic || egg?.equippedCosmetic || null;
+  const equippedCosmeticImage = getCosmeticAsset(equippedCosmeticKey);
 
   return (
     <main className="app-page egg-dashboard-page">
@@ -31,11 +29,11 @@ function EggDashboardPage() {
         <section className="window-area" aria-label="Egg window scene placeholder">
           <div
             className="window-frame"
-            style={{ "--window-frame-image": `url(${windowFrameImage})` }}
+            style={{ "--window-frame-image": `url(${baseAssets.windowFrame})` }}
           >
             <div
               className="window-view"
-              style={{ "--window-background-image": `url(${windowBackgroundImage})` }}
+              style={{ "--window-background-image": `url(${baseAssets.background})` }}
             >
               <div className="window-sill" />
             </div>
@@ -43,11 +41,20 @@ function EggDashboardPage() {
             <div className="scene-layer">
               <div className="scene-group">
                 <div className="scene-art scene-nest">
-                  <img src={nestImage} alt="Nest" />
+                  <img src={baseAssets.nest} alt="Nest" />
                 </div>
 
                 <div className="scene-art scene-egg">
-                  <img src={eggImage} alt="Egg" />
+                  <img src={baseAssets.egg} alt="Egg" />
+
+                  {equippedCosmeticImage && (
+                    <img
+                      src={equippedCosmeticImage}
+                      alt=""
+                      aria-hidden="true"
+                      className="scene-cosmetic"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -101,7 +108,7 @@ function EggDashboardPage() {
           <section className="dashboard-notebook">
             <div
               className="notebook-shell"
-              style={{ "--notebook-image": `url(${notebookImage})` }}
+              style={{ "--notebook-image": `url(${baseAssets.notebook})` }}
             >
               <h2 className="notebook-title">My Notebook</h2>
 
