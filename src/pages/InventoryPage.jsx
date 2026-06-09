@@ -4,6 +4,7 @@ import { useEgg } from "../hooks/useEgg";
 import {
   getBackgroundAsset,
   getCosmeticAsset,
+  getMusicCoverAsset,
 } from "../assets/assetRegistry";
 import { Link } from "react-router-dom";
 
@@ -38,6 +39,10 @@ function getInventoryItemImage(item) {
 
   if (item.item_type === "decoration") {
     return getCosmeticAsset(item.asset_key);
+  }
+
+  if (item.item_type === "music") {
+    return getMusicCoverAsset(item.asset_key);
   }
 
   return item.asset_url || null;

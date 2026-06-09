@@ -4,6 +4,7 @@ import defaultNest from "./nest.PNG";
 import notebook from "./notebook.PNG";
 import windowFrame from "./windowframe.PNG";
 
+import defaultBg from "./background/default-bg.jpg";
 import fallBackground from "./background/fall-bg.PNG";
 import grassBackground from "./background/grass-bg.PNG";
 import nightStreetBackground from "./background/nightstreet-bg.png";
@@ -23,6 +24,10 @@ import eternityInMoments from "./music/eternity-in-moments.m4a";
 import goldPhenomenon from "./music/gold-phenomenon.m4a";
 import miQuerido from "./music/mi-querido.m4a";
 
+import eternityInMomentsCover from "./music-covers/eternity-in-moments.jpeg";
+import miQueridoCover from "./music-covers/mi-querido.jpeg";
+import goldPhenomenonCover from "./music-covers/gold-phenomenon.png";
+
 export const baseAssets = {
   background: defaultBackground,
   egg: defaultEgg,
@@ -32,7 +37,7 @@ export const baseAssets = {
 };
 
 export const backgroundAssets = {
-  default: defaultBackground,
+  default: defaultBg,
   fall_bg: fallBackground,
   grass_bg: grassBackground,
   nightstreet_bg: nightStreetBackground,
@@ -57,6 +62,12 @@ export const musicAssets = {
   mi_querido: miQuerido,
 };
 
+export const musicCoverAssets = {
+  eternity_in_moments: eternityInMomentsCover,
+  mi_querido: miQueridoCover,
+  gold_phenomenon: goldPhenomenonCover,
+};
+
 export function getBackgroundAsset(backgroundKey) {
   return backgroundAssets[backgroundKey] || backgroundAssets.default;
 }
@@ -71,4 +82,8 @@ export function getCosmeticAsset(cosmeticKey) {
 
 export function getMusicAsset(musicKey) {
   return musicAssets[musicKey] || null;
+}
+
+export function getMusicCoverAsset(assetKey) {
+  return musicCoverAssets[assetKey] || null;
 }

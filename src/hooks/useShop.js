@@ -35,6 +35,8 @@ export function useShop() {
 
         const refreshed = await reloadShop();
 
+        window.dispatchEvent(new Event("memory-egg:user-updated"));
+
         return {
           ...result,
           shopItems: refreshed.shopItems,
