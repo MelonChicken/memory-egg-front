@@ -17,23 +17,6 @@ function getTagClassName(tag) {
 function ProfilePage() {
   return (
     <main className="app-page profile-page">
-      <header className="profile-header">
-        <div className="profile-brand">Nacimiento</div>
-
-        <nav className="profile-nav" aria-label="Main navigation">
-          <a href="/nest">⌂ Nest</a>
-          <a href="/shop">▣ Shop</a>
-        </nav>
-
-        <div className="profile-user">
-          <div className="profile-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
-          </div>
-          <div className="profile-avatar-small" aria-label="User profile placeholder" />
-        </div>
-      </header>
-
       <section className="profile-layout">
         <section className="profile-card profile-hero-card">
           <div className="profile-avatar-large">

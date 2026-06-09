@@ -53,23 +53,6 @@ function WritePostPage() {
 
   return (
     <main className={`app-page write-post-page visibility-${visibility}`}>
-      <header className="write-header">
-        <div className="write-brand">nacimiento</div>
-
-        <nav className="write-nav" aria-label="Main navigation">
-          <a href="/nest">⌂ Nest</a>
-          <a href="/shop">▣ Shop</a>
-        </nav>
-
-        <div className="write-user">
-          <div className="write-user-text">
-            <span>USER NAME</span>
-            <strong>N Days</strong>
-          </div>
-          <div className="write-avatar" aria-label="User profile placeholder" />
-        </div>
-      </header>
-
       <section className="write-layout">
         <section className="write-main">
           <div className="write-page-heading">
