@@ -1,3 +1,6 @@
+import { getRawShopItems } from "./shopApi";
+import { getInventoryItems } from "./inventoryApi";
+
 const EGG_STORAGE_KEY = "memory_egg_egg";
 
 const defaultEgg = {
@@ -81,7 +84,15 @@ function findEquippedItemByType(inventoryItems, itemType) {
 }
 
 export async function getEgg() {
-  return loadEggFromStorage();
+  try {
+    const rawShopItems = await getRawShopItems();
+    const inventoryItems = await getInventoryItems(rawShopItems);
+
+    return recalculateEggFromInventory(inventoryItems);
+  } catch (error) {
+    console.warn("Failed to sync egg from inventory:", error);
+    return loadEggFromStorage();
+  }
 }
 
 export async function recalculateEggFromInventory(inventoryItems) {

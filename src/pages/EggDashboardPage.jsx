@@ -13,7 +13,9 @@ function EggDashboardPage() {
   const { quests, loading: questsLoading } = useQuests();
 
   const equippedCosmeticKey = egg?.equipped_cosmetic || egg?.equippedCosmetic || null;
-  const equippedCosmeticImage = getCosmeticAsset(equippedCosmeticKey);
+  const equippedCosmeticImage = equippedCosmeticKey
+    ? getCosmeticAsset(equippedCosmeticKey)
+    : null;
   const equippedBackgroundKey = egg?.equipped_background || egg?.equippedBackground || "default";
   const equippedBackgroundImage = getBackgroundAsset(equippedBackgroundKey);
 
