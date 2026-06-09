@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { useInventory } from "../hooks/useInventory";
 import { useEgg } from "../hooks/useEgg";
+import {
+  getBackgroundAsset,
+  getCosmeticAsset,
+} from "../assets/assetRegistry";
+
 import "./InventoryPage.css";
 
 const inventoryCategories = [
@@ -20,6 +25,22 @@ const inventoryCategories = [
     icon: "♪",
   },
 ];
+
+function getInventoryItemImage(item) {
+  if (!item?.asset_key) {
+    return item?.asset_url || null;
+  }
+
+  if (item.item_type === "background") {
+    return getBackgroundAsset(item.asset_key);
+  }
+
+  if (item.item_type === "decoration") {
+    return getCosmeticAsset(item.asset_key);
+  }
+
+  return item.asset_url || null;
+}
 
 function InventoryPage() {
   const [activeCategory, setActiveCategory] = useState("background");
@@ -144,11 +165,11 @@ function InventoryPage() {
                     type="button"
                     onClick={() => setSelectedUserItemId(item.user_item_id)}
                   >
-                    <div className="inventory-item-image">
-                      {item.asset_url ? (
-                        <img src={item.asset_url} alt={item.name} />
+                    <div className={`inventory-item-image inventory-item-image-${item.item_type}`}>
+                      {getInventoryItemImage(item) ? (
+                        <img src={getInventoryItemImage(item)} alt={item.name} />
                       ) : (
-                        <span>▧</span>
+                        <span>{item.item_type === "music" ? "♪" : "▧"}</span>
                       )}
                     </div>
 

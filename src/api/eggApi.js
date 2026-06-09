@@ -14,7 +14,7 @@ const defaultEgg = {
 
   equipped_background: "default",
   selected_music: null,
-  equipped_cosmetic: "flower_crown",
+  equipped_cosmetic: null,
 
   updated_at: new Date().toISOString(),
 };

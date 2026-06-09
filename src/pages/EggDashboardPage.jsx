@@ -2,7 +2,11 @@ import "./EggDashboardPage.css";
 
 import { useEgg } from "../hooks/useEgg";
 import { useQuests } from "../hooks/useQuests";
-import { baseAssets, getCosmeticAsset } from "../assets/assetRegistry";
+import {
+  baseAssets,
+  getBackgroundAsset,
+  getCosmeticAsset,
+} from "../assets/assetRegistry";
 
 function EggDashboardPage() {
   const { egg, loading } = useEgg();
@@ -10,6 +14,8 @@ function EggDashboardPage() {
 
   const equippedCosmeticKey = egg?.equipped_cosmetic || egg?.equippedCosmetic || null;
   const equippedCosmeticImage = getCosmeticAsset(equippedCosmeticKey);
+  const equippedBackgroundKey = egg?.equipped_background || egg?.equippedBackground || "default";
+  const equippedBackgroundImage = getBackgroundAsset(equippedBackgroundKey);
 
   return (
     <main className="app-page egg-dashboard-page">
@@ -33,7 +39,7 @@ function EggDashboardPage() {
           >
             <div
               className="window-view"
-              style={{ "--window-background-image": `url(${baseAssets.background})` }}
+              style={{ "--window-background-image": `url(${equippedBackgroundImage})` }}
             >
               <div className="window-sill" />
             </div>

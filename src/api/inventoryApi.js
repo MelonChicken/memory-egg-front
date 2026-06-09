@@ -38,6 +38,7 @@ function buildInventoryView(userItem, shopItem) {
     price: shopItem.price,
     effect_type: shopItem.effect_type,
     effect_value: shopItem.effect_value,
+    asset_key: shopItem.asset_key,
     asset_url: shopItem.asset_url,
     is_active: shopItem.is_active,
   };
