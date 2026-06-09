@@ -16,23 +16,18 @@ function RegisterPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (
-      !nickname.trim() ||
-      !email.trim() ||
-      !password.trim() ||
-      !confirmPassword.trim()
-    ) {
+    if (submitting) {
+      return;
+    }
+
+    setErrorMessage("");
+
+    if (!nickname.trim() || !email.trim() || !password.trim()) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
 
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
-
     setSubmitting(true);
-    setErrorMessage("");
 
     try {
       await registerUser({
@@ -43,8 +38,7 @@ function RegisterPage() {
 
       navigate("/nest");
     } catch (error) {
-      setErrorMessage(error.message);
-    } finally {
+      setErrorMessage(error.message || "Failed to create account.");
       setSubmitting(false);
     }
   }
@@ -122,7 +116,7 @@ function RegisterPage() {
             type="submit"
             disabled={submitting}
           >
-            {submitting ? "Signing Up..." : "Sign Up"}
+            {submitting ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 

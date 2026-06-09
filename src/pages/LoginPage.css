@@ -127,10 +127,16 @@
 }
 
 .login-error-message {
-  margin: 0;
+  margin: 0.6rem 0 0;
   color: #b34135;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  line-height: 1.35;
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Responsive */

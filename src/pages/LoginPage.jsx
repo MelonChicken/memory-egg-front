@@ -14,13 +14,18 @@ function LoginPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    if (submitting) {
+      return;
+    }
+
+    setErrorMessage("");
+
     if (!email.trim() || !password.trim()) {
       setErrorMessage("Please enter both email and password.");
       return;
     }
 
     setSubmitting(true);
-    setErrorMessage("");
 
     try {
       await loginUser({
@@ -30,8 +35,7 @@ function LoginPage() {
 
       navigate("/nest");
     } catch (error) {
-      setErrorMessage(error.message);
-    } finally {
+      setErrorMessage(error.message || "Failed to log in.");
       setSubmitting(false);
     }
   }
