@@ -126,6 +126,13 @@
   font-weight: 700;
 }
 
+.register-error-message {
+  margin: 0;
+  color: #b34135;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 /* responsive */
 @media (max-width: 860px) {
   .register-page {
