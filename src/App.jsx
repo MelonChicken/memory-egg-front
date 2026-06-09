@@ -16,12 +16,23 @@ import InventoryPage from "./pages/InventoryPage.jsx";
 import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
 
+import Header from "./components/header.jsx";
+
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace />;
   }
 
   return children;
+}
+
+function ProtectedPage({ children }) {
+  return (
+    <ProtectedRoute>
+      <Header />
+      {children}
+    </ProtectedRoute>
+  );
 }
 
 function PublicOnlyRoute({ children }) {
@@ -66,57 +77,57 @@ function App() {
         <Route
           path="/nest"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <EggDashboardPage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
         <Route
           path="/write"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <WritePostPage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
         <Route
           path="/archive"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <MemoryArchivePage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
         <Route
           path="/posts/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <ViewPostPage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
         <Route
           path="/shop"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <ShopPage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
         <Route
           path="/inventory"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <InventoryPage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
+            <ProtectedPage>
               <ProfilePage />
-            </ProtectedRoute>
+            </ProtectedPage>
           }
         />
 
