@@ -48,9 +48,19 @@ export function isAuthenticated() {
   return Boolean(getAuthToken());
 }
 
+function getAuthHeaders() {
+  const token = getAuthToken();
+
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export function logoutUser() {
   localStorage.removeItem(TOKEN_STORAGE_KEY);
   localStorage.removeItem(USER_STORAGE_KEY);
+  localStorage.removeItem(EGG_STORAGE_KEY);
 }
 
 export async function registerUser({ nickname, email, password }) {
@@ -96,8 +106,87 @@ export async function loginUser({ email, password }) {
   return saveAuthSession(data);
 }
 
+function normalizeCurrentUserResponse(data) {
+  // Backend currently returns:
+  // { user: { user: {...}, egg: {...}, active_background: ..., ... } }
+  // But this also supports simpler future shapes.
+  const sessionData = data?.user?.user ? data.user : data;
+
+  return {
+    user: sessionData?.user || data?.user || null,
+    egg: sessionData?.egg || data?.egg || null,
+    active_background:
+      sessionData?.active_background || data?.active_background || null,
+    active_music: sessionData?.active_music || data?.active_music || null,
+    active_cosmetic:
+      sessionData?.active_cosmetic || data?.active_cosmetic || null,
+  };
+}
+
+function saveCurrentSessionToStorage(session) {
+  if (session.user) {
+    saveUserToStorage(session.user);
+  }
+
+  if (session.egg) {
+    saveEggToStorage(session.egg);
+  }
+
+  if (session.active_background) {
+    localStorage.setItem(
+      "memory_egg_active_background",
+      JSON.stringify(session.active_background)
+    );
+  }
+
+  if (session.active_music) {
+    localStorage.setItem(
+      "memory_egg_active_music",
+      JSON.stringify(session.active_music)
+    );
+  }
+
+  if (session.active_cosmetic) {
+    localStorage.setItem(
+      "memory_egg_active_cosmetic",
+      JSON.stringify(session.active_cosmetic)
+    );
+  }
+}
+
 export async function getCurrentUser() {
-  return loadUserFromStorage();
+  const token = getAuthToken();
+
+  if (!token) {
+    return loadUserFromStorage();
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+      method: "GET",
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403 || response.status === 404) {
+        logoutUser();
+        return null;
+      }
+
+      throw new Error(data?.error || data?.message || "Failed to load user.");
+    }
+
+    const session = normalizeCurrentUserResponse(data);
+
+    saveCurrentSessionToStorage(session);
+
+    return session.user;
+  } catch (error) {
+    console.warn("Failed to refresh current user:", error);
+    return loadUserFromStorage();
+  }
 }
 
 export async function addWill(amount) {
