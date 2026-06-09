@@ -44,7 +44,7 @@ export function useInventory() {
       );
 
       window.dispatchEvent(new Event("memory-egg:inventory-updated"));
-      
+
       return updatedInventoryItems;
     } catch (error) {
       setErrorMessage(error.message);
@@ -65,6 +65,8 @@ export function useInventory() {
       setInventoryItems(
         Array.isArray(updatedInventoryItems) ? updatedInventoryItems : []
       );
+
+      window.dispatchEvent(new Event("memory-egg:inventory-updated"));
 
       return updatedInventoryItems;
     } catch (error) {

@@ -136,6 +136,24 @@ async function equipItemOnBackend(itemId) {
   return data;
 }
 
+async function unequipItemOnBackend(itemId) {
+  const response = await fetch(`${API_BASE_URL}/egg/unequip`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      item_id: itemId,
+    }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || data?.message || "Failed to unequip item.");
+  }
+
+  return data;
+}
+
 //
 
 function buildInventoryView(userItem, shopItem) {
@@ -309,7 +327,21 @@ export async function equipUserItem(userItemId, shopItems) {
 
 export async function unequipUserItem(userItemId) {
   if (shouldUseBackend()) {
-    throw new Error("Unequip is not supported yet. Equip another item instead.");
+    const inventory = await loadInventoryFromBackend();
+
+    const selectedUserItem = inventory.userItems.find(
+      (userItem) => Number(userItem.user_item_id) === Number(userItemId)
+    );
+
+    if (!selectedUserItem) {
+      throw new Error("Inventory item not found.");
+    }
+
+    await unequipItemOnBackend(selectedUserItem.item_id);
+
+    const updatedInventory = await loadInventoryFromBackend();
+
+    return updatedInventory.userItems;
   }
 
   const userItems = loadUserItemsFromStorage();
