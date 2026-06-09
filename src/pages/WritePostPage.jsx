@@ -77,6 +77,8 @@ function WritePostPage() {
 
       await reloadUser();
 
+      window.dispatchEvent(new Event("memory-egg:user-updated"));
+
       if (claimedQuestCount > 0) {
         setSuccessMessage(
           `Post created. ${claimedQuestCount} quest reward claimed! Redirecting...`

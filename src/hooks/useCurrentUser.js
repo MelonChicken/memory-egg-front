@@ -20,20 +20,34 @@ export function useCurrentUser() {
     let ignore = false;
 
     async function loadInitialUser() {
-      const data = await getCurrentUser();
+      setLoading(true);
 
-      if (!ignore) {
-        setUser(data);
-        setLoading(false);
+      try {
+        const data = await getCurrentUser();
+
+        if (!ignore) {
+          setUser(data);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
       }
+    }
+
+    function handleUserUpdated() {
+      reloadUser();
     }
 
     loadInitialUser();
 
+    window.addEventListener("memory-egg:user-updated", handleUserUpdated);
+
     return () => {
       ignore = true;
+      window.removeEventListener("memory-egg:user-updated", handleUserUpdated);
     };
-  }, []);
+  }, [reloadUser]);
 
   return {
     user,
