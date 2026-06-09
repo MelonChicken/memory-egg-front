@@ -578,6 +578,45 @@
   clip-path: inset(50%);
 }
 
+/* message */
+
+.write-submit-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 300px;
+}
+
+.write-submit-message-slot {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.45rem);
+  width: 300px;
+  min-height: 1.2rem;
+  text-align: right;
+}
+
+.write-post-message {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.write-post-message-error {
+  color: #b34135;
+}
+
+.write-post-message-success {
+  color: #3b7d3f;
+}
+
+.post-submit-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 /* Responsive */
 
 @media (max-width: 760px) {

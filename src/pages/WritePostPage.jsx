@@ -17,6 +17,10 @@ function WritePostPage() {
   /*const [imageUrl, setImageUrl] = useState("");*/
   const [visibility, setVisibility] = useState("private");
 
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
   const navigate = useNavigate();
 
   {/*NOTE: LOGICS SHOULD BE IMPLEMENTED IN BACKEND. THESE ARE TEMPORARY PLACEHOLDERS */}
@@ -26,10 +30,19 @@ function WritePostPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!title.trim() || !content.trim()) {
-      alert("Please write both title and content.");
+    if (submitting) {
       return;
     }
+
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (!title.trim() || !content.trim()) {
+      setErrorMessage("Please write both title and content.");
+      return;
+    }
+
+    setSubmitting(true);
 
     try {
       const { newPost } = await addPost({
@@ -42,12 +55,12 @@ function WritePostPage() {
 
       const createdPost = newPost.post || newPost;
       const postId = createdPost.id || createdPost.post_id;
-      
+
       const matchingQuests = quests.filter((quest) =>
         doesPostLikelySatisfyQuest(createdPost, quest)
       );
 
-      console.log("matching quests:", matchingQuests);
+      let claimedQuestCount = 0;
 
       for (const quest of matchingQuests) {
         try {
@@ -55,6 +68,8 @@ function WritePostPage() {
             userQuestId: quest.user_quest_id,
             postId,
           });
+
+          claimedQuestCount += 1;
         } catch (claimError) {
           console.warn("Quest claim failed:", claimError);
         }
@@ -62,11 +77,21 @@ function WritePostPage() {
 
       await reloadUser();
 
-      alert("Post created! Redirecting you to Archive Page");
-      navigate("/archive");
-    } catch (error) {
-      alert(error.message || "Failed to create post.");
-    }
+      if (claimedQuestCount > 0) {
+        setSuccessMessage(
+          `Post created. ${claimedQuestCount} quest reward claimed! Redirecting...`
+        );
+      } else {
+        setSuccessMessage("Post created. Redirecting...");
+      }
+
+      setTimeout(() => {
+        navigate("/archive");
+      }, 700);
+      } catch (error) {
+        setErrorMessage(error.message || "Failed to create post.");
+        setSubmitting(false);
+      }
   }
 
   return (
@@ -182,9 +207,27 @@ function WritePostPage() {
                 </label>
               </fieldset>
 
-              <button className="post-submit-button" type="submit">
-                Post
-              </button>
+              <div className="write-submit-area">
+                {errorMessage && (
+                  <p className="write-post-message write-post-message-error">
+                    {errorMessage}
+                  </p>
+                )}
+
+                {successMessage && (
+                  <p className="write-post-message write-post-message-success">
+                    {successMessage}
+                  </p>
+                )}
+
+                <button
+                  className="post-submit-button"
+                  type="submit"
+                  disabled={submitting}
+                >
+                  {submitting ? "Posting..." : "Post"}
+                </button>
+              </div>
             </div>
           </form>
         </section>
