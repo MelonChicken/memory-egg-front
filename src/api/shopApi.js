@@ -6,6 +6,28 @@ import {
 import { spendWill } from "./userApi";
 
 const SHOP_ITEMS_STORAGE_KEY = "memory_egg_shop_items";
+const TOKEN_STORAGE_KEY = "memory_egg_token";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+function getAuthToken() {
+  return localStorage.getItem(TOKEN_STORAGE_KEY);
+}
+
+function shouldUseBackend() {
+  return Boolean(getAuthToken());
+}
+
+function getAuthHeaders() {
+  const token = getAuthToken();
+
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+
 
 const defaultShopItems = [
   {
@@ -228,6 +250,62 @@ function loadShopItemsFromStorage() {
   return parsedShopItems;
 }
 
+// BACKEND INTEGRATION
+
+async function loadShopItemsFromBackend() {
+  const response = await fetch(`${API_BASE_URL}/shop/items`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || data?.message || "Failed to load shop items.");
+  }
+
+  const items = Array.isArray(data) ? data : data?.items;
+
+  return Array.isArray(items) ? items.map(normalizeShopItem) : [];
+}
+
+//Helper function
+function normalizeItemType(itemType) {
+  if (itemType === "cosmetic") {
+    return "decoration";
+  }
+
+  return itemType;
+}
+
+function toDisplayName(assetKey) {
+  if (!assetKey) {
+    return "Unknown Item";
+  }
+
+  return assetKey
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function normalizeShopItem(item) {
+  const assetKey = item.asset_key || item.name;
+
+  return {
+    ...item,
+    item_id: item.item_id || item.id,
+    id: item.id || item.item_id,
+    name: item.display_name || item.title || toDisplayName(assetKey),
+    asset_key: assetKey,
+    item_type: normalizeItemType(item.item_type),
+    price: item.price ?? item.price_will ?? 0,
+    is_active: item.is_active === true || item.is_active === 1,
+  };
+}
+
+//status check
+
 function decorateShopItems(shopItems, userItems) {
   return shopItems.map((shopItem) => {
     const ownedUserItem = userItems.find(
@@ -246,11 +324,15 @@ function decorateShopItems(shopItems, userItems) {
 /* exported api logic */
 
 export async function getRawShopItems() {
+  if (shouldUseBackend()) {
+    return loadShopItemsFromBackend();
+  }
+
   return loadShopItemsFromStorage();
 }
 
 export async function getShopItems() {
-  const shopItems = loadShopItemsFromStorage();
+  const shopItems = await getRawShopItems();
   const userItems = await getUserItems();
 
   return decorateShopItems(shopItems, userItems);
