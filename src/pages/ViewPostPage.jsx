@@ -1,24 +1,48 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deletePost, getPostById } from "../api/postsApi";
+import { usePosts } from "../hooks/usePosts";
 import "./ViewPostPage.css";
+
+import { Link } from "react-router-dom";
 
 function ViewPostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { getPost, removePost } = usePosts();
 
   useEffect(() => {
-    async function loadPost() {
-      const foundPost = await getPostById(id);
+    let ignore = false;
 
-      setPost(foundPost || null);
-      setLoading(false);
+    async function loadPost() {
+      setLoading(true);
+
+      try {
+        const foundPost = await getPost(id);
+
+        if (!ignore) {
+          setPost(foundPost || null);
+        }
+      } catch (error) {
+        console.warn("Failed to load post:", error);
+
+        if (!ignore) {
+          setPost(null);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
     }
 
     loadPost();
-  }, [id]);
+
+    return () => {
+      ignore = true;
+    };
+  }, [id, getPost]);
 
   if (loading) {
     return (
@@ -32,38 +56,37 @@ function ViewPostPage() {
     return (
       <main className="app-page view-post-page">
         <p>Post not found.</p>
-        <a href="/archive">← Back to Archive</a>
+        <Link to="/archive">← Back to Archive</Link>
       </main>
     );
   }
 
-  async function handleDelete() {
-    /*
-    console.log("Delete button clicked");
-    console.log("Current post:", post);
-    */
-    const confirmed = window.confirm("Delete this memory?");
-    /*
-    console.log("Confirmed:", confirmed);
-    */
+  async function handleDeletePost() {
+    if (!post) {
+      return;
+    }
+
+    const confirmed = window.confirm("Delete this post?");
+
     if (!confirmed) {
       return;
     }
 
-    await deletePost(post.post_id);
-    /*
-    console.log("Deleted post id:", post.post_id);
-    */
-    navigate("/archive");
+    try {
+      await removePost(post.post_id || post.id);
+      navigate("/archive", { replace: true });
+    } catch (error) {
+      console.warn("Failed to delete post:", error);
+    }
   }
 
   return (
     <main className="app-page view-post-page">
 
       <section className="view-post-layout">
-        <a className="back-to-archive" href="/archive">
+        <Link className="back-to-archive" to="/archive">
           ← Back to Archive
-        </a>
+        </Link>
 
         <article className="post-detail-card">
           <header className="post-detail-header">
@@ -89,7 +112,7 @@ function ViewPostPage() {
           <button
             className="delete-post-button"
             type="button"
-            onClick={handleDelete}
+            onClick={handleDeletePost}
           >
             ⌫ Delete Post
           </button>

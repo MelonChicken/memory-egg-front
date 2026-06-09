@@ -1,6 +1,48 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../api/userApi";
 import "./RegisterPage.css";
 
 function RegisterPage() {
+  const navigate = useNavigate();
+
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (submitting) {
+      return;
+    }
+
+    setErrorMessage("");
+
+    if (!nickname.trim() || !email.trim() || !password.trim()) {
+      setErrorMessage("Please fill in all fields.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await registerUser({
+        nickname,
+        email,
+        password,
+      });
+
+      navigate("/nest");
+    } catch (error) {
+      setErrorMessage(error.message || "Failed to create account.");
+      setSubmitting(false);
+    }
+  }
+
   return (
     <main className="app-page register-page">
       <section className="register-intro" aria-labelledby="register-intro-title">
@@ -20,29 +62,61 @@ function RegisterPage() {
           “Write your memories. Care for your egg. Your forgotten self is waiting.”
         </p>
 
-        <form className="register-form">
+        <form className="register-form" onSubmit={handleSubmit}>
           <label className="register-field">
             <span>Nickname</span>
-            <input type="text" name="nickname" placeholder="What should we call you?" />
+            <input
+              type="text"
+              name="nickname"
+              placeholder="What should we call you?"
+              value={nickname}
+              onChange={(event) => setNickname(event.target.value)}
+            />
           </label>
 
           <label className="register-field">
-            <span>ID</span>
-            <input type="text" name="userId" placeholder="ID for login" />
+            <span>Email</span>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email for login"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
           </label>
 
           <label className="register-field">
             <span>Secret Password</span>
-            <input type="password" name="password" placeholder="••••••••" />
+            <input
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
           </label>
 
           <label className="register-field">
             <span>Verify Password</span>
-            <input type="password" name="confirmPassword" placeholder="Type the same password as above." />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Type the same password as above."
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+            />
           </label>
 
-          <button className="register-submit" type="button"> {/* TODO: JS SUBMIT LOGIC NEED TO BE IMPLEMENTED */}
-            Sign Up
+          {errorMessage && (
+            <p className="register-error-message">{errorMessage}</p>
+          )}
+
+          <button
+            className="register-submit"
+            type="submit"
+            disabled={submitting}
+          >
+            {submitting ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 

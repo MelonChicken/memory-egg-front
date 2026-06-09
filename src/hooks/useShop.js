@@ -26,21 +26,29 @@ export function useShop() {
     };
   }, []);
 
-  const purchaseItem = useCallback(async (itemId) => {
-    setErrorMessage("");
+  const purchaseItem = useCallback(
+    async (itemId) => {
+      setErrorMessage("");
 
-    try {
-      const result = await purchaseShopItem(itemId);
+      try {
+        const result = await purchaseShopItem(itemId);
 
-      setShopItems(Array.isArray(result.shopItems) ? result.shopItems : []);
-      setUser(result.user);
+        const refreshed = await reloadShop();
 
-      return result;
-    } catch (error) {
-      setErrorMessage(error.message);
-      throw error;
-    }
-  }, []);
+        window.dispatchEvent(new Event("memory-egg:user-updated"));
+
+        return {
+          ...result,
+          shopItems: refreshed.shopItems,
+          user: refreshed.user,
+        };
+      } catch (error) {
+        setErrorMessage(error.message);
+        throw error;
+      }
+    },
+    [reloadShop]
+  );
 
   useEffect(() => {
     let ignore = false;

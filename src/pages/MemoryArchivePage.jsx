@@ -2,6 +2,8 @@ import { useState } from "react";
 import { usePosts } from "../hooks/usePosts";
 import "./MemoryArchivePage.css";
 
+import { Link } from "react-router-dom";
+
 
 function formatPostDate(dateString) {
   if (!dateString) {
@@ -129,7 +131,7 @@ function MemoryArchivePage() {
         <section className="archive-empty-state">
           <h1>No memories yet</h1>
           <p>Write your first notebook post to fill the archive.</p>
-          <a href="/write">Write a post</a>
+          <Link to="/write">Write a post</Link>
         </section>
       </main>
     );
@@ -149,13 +151,13 @@ function MemoryArchivePage() {
           </div>
 
           <nav className="archive-shelf-nav" aria-label="Archive shelves">
-            <a className="active" href="/archive">
+            <Link className="active" to="/archive">
               ▧ Main Shelf
-            </a>
+            </Link>
 
-            <a className="archive-write-link" href="/write">
+            <Link className="archive-write-link" to="/write">
               ✎ Write Post
-            </a>
+            </Link>
           </nav>
 
           <section className="archive-progress-card">
@@ -218,7 +220,7 @@ function MemoryArchivePage() {
           </div>
 
           <div className="preview-actions">
-            <a href={`/posts/${selectedPost.post_id}`}>⌕ View</a>
+            <Link to={`/posts/${selectedPost.post_id}`}>⌕ View</Link>
             <button
               type="button"
               aria-label="Delete post"

@@ -1,6 +1,13 @@
 import { useMemo, useState } from "react";
 import { useInventory } from "../hooks/useInventory";
 import { useEgg } from "../hooks/useEgg";
+import {
+  getBackgroundAsset,
+  getCosmeticAsset,
+  getMusicCoverAsset,
+} from "../assets/assetRegistry";
+import { Link } from "react-router-dom";
+
 import "./InventoryPage.css";
 
 const inventoryCategories = [
@@ -20,6 +27,26 @@ const inventoryCategories = [
     icon: "♪",
   },
 ];
+
+function getInventoryItemImage(item) {
+  if (!item?.asset_key) {
+    return item?.asset_url || null;
+  }
+
+  if (item.item_type === "background") {
+    return getBackgroundAsset(item.asset_key);
+  }
+
+  if (item.item_type === "decoration") {
+    return getCosmeticAsset(item.asset_key);
+  }
+
+  if (item.item_type === "music") {
+    return getMusicCoverAsset(item.asset_key);
+  }
+
+  return item.asset_url || null;
+}
 
 function InventoryPage() {
   const [activeCategory, setActiveCategory] = useState("background");
@@ -128,11 +155,11 @@ function InventoryPage() {
                     type="button"
                     onClick={() => setSelectedUserItemId(item.user_item_id)}
                   >
-                    <div className="inventory-item-image">
-                      {item.asset_url ? (
-                        <img src={item.asset_url} alt={item.name} />
+                    <div className={`inventory-item-image inventory-item-image-${item.item_type}`}>
+                      {getInventoryItemImage(item) ? (
+                        <img src={getInventoryItemImage(item)} alt={item.name} />
                       ) : (
-                        <span>▧</span>
+                        <span>{item.item_type === "music" ? "♪" : "▧"}</span>
                       )}
                     </div>
 
@@ -158,17 +185,20 @@ function InventoryPage() {
         </div>
 
         <footer className="inventory-footer">
-          <a className="inventory-close-button" href="/nest">
+          <Link className="inventory-close-button" to="/nest">
             Close
-          </a>
+          </Link>
 
           {selectedItem ? (
             <button
-              className="equip-item-button"
+              className={`equip-item-button ${
+                selectedItem?.is_equipped ? "unequip" : ""
+              }`}
               type="button"
               onClick={handleToggleEquip}
+              disabled={!selectedItem}
             >
-              {selectedItem.is_equipped ? "Unequip" : "Equip"}
+              {selectedItem?.is_equipped ? "Unequip" : "Equip"}
             </button>
           ) : (
             <button className="equip-item-button" type="button" disabled>

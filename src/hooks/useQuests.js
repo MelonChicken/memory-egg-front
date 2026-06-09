@@ -8,45 +8,79 @@ import {
 export function useQuests() {
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const reloadQuests = useCallback(async () => {
     setLoading(true);
+    setErrorMessage("");
 
-    const data = await getTodayQuests();
+    try {
+      const data = await getTodayQuests();
 
-    setQuests(Array.isArray(data) ? data : []);
-    setLoading(false);
+      setQuests(Array.isArray(data) ? data : []);
 
-    return data;
+      return data;
+    } catch (error) {
+      setErrorMessage(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const checkPostForQuestCompletion = useCallback(async (post) => {
-    const updatedQuests = await checkPostAgainstQuests(post);
+    setErrorMessage("");
 
-    setQuests(Array.isArray(updatedQuests) ? updatedQuests : []);
+    try {
+      const updatedQuests = await checkPostAgainstQuests(post);
 
-    return updatedQuests;
+      setQuests(Array.isArray(updatedQuests) ? updatedQuests : []);
+
+      return updatedQuests;
+    } catch (error) {
+      setErrorMessage(error.message);
+      throw error;
+    }
   }, []);
 
-  const claimReward = useCallback(async (questId) => {
-    await claimQuestReward(questId);
+  const claimQuestForPost = useCallback(async ({ userQuestId, postId }) => {
+    setErrorMessage("");
 
-    const updatedQuests = await getTodayQuests();
+    try {
+      const result = await claimQuestReward({ userQuestId, postId });
 
-    setQuests(Array.isArray(updatedQuests) ? updatedQuests : []);
+      const updatedQuests = await getTodayQuests();
 
-    return updatedQuests;
+      setQuests(Array.isArray(updatedQuests) ? updatedQuests : []);
+
+      return result;
+    } catch (error) {
+      setErrorMessage(error.message);
+      throw error;
+    }
   }, []);
 
   useEffect(() => {
     let ignore = false;
 
     async function loadInitialQuests() {
-      const data = await getTodayQuests();
+      setLoading(true);
+      setErrorMessage("");
 
-      if (!ignore) {
-        setQuests(Array.isArray(data) ? data : []);
-        setLoading(false);
+      try {
+        const data = await getTodayQuests();
+
+        if (!ignore) {
+          setQuests(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setErrorMessage(error.message);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
       }
     }
 
@@ -60,8 +94,9 @@ export function useQuests() {
   return {
     quests,
     loading,
+    errorMessage,
     reloadQuests,
     checkPostForQuestCompletion,
-    claimReward,
+    claimQuestForPost,
   };
 }
