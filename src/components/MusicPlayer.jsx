@@ -111,9 +111,6 @@ export default function MusicPlayer() {
   }, [position]);
 
   useEffect(() => {
-    setPlaying(false);
-    setErrorMessage("");
-
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
@@ -202,8 +199,9 @@ export default function MusicPlayer() {
       movedDuringDragRef.current = true;
     }
 
-    const currentWidth = collapsed ? 52 : PLAYER_SIZE.width;
-    const currentHeight = collapsed ? 52 : PLAYER_SIZE.height;
+    const collapsedSize = window.innerWidth <= 680 ? 46 : 52;
+    const currentWidth = collapsed ? collapsedSize : PLAYER_SIZE.width;
+    const currentHeight = collapsed ? collapsedSize : PLAYER_SIZE.height;
 
     setPosition({
       x: clamp(
@@ -284,6 +282,8 @@ export default function MusicPlayer() {
         ref={audioRef}
         src={selectedMusicSrc || undefined}
         loop
+        onPause={() => setPlaying(false)}
+        onPlay={() => setPlaying(true)}
         onEnded={handleEnded}
       />
 
