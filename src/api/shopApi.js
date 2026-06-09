@@ -339,6 +339,32 @@ export async function getShopItems() {
 }
 
 export async function purchaseShopItem(itemId) {
+  if (shouldUseBackend()) {
+    const response = await fetch(`${API_BASE_URL}/shop/purchase`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        item_id: itemId,
+      }),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throw new Error(data?.error || data?.message || "Failed to purchase item.");
+    }
+
+    const updatedShopItems = await getShopItems();
+    const updatedInventoryItems = await getInventoryItems(await getRawShopItems());
+
+    return {
+      purchasedItem: data?.item || data?.purchasedItem || null,
+      user: data?.user || null,
+      shopItems: updatedShopItems,
+      inventoryItems: updatedInventoryItems,
+    };
+  }
+
   const shopItems = loadShopItemsFromStorage();
 
   const selectedItem = shopItems.find(
