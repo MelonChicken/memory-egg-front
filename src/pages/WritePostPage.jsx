@@ -40,11 +40,14 @@ function WritePostPage() {
         visibility,
       });
 
-      const postId = newPost.id || newPost.post_id;
-
+      const createdPost = newPost.post || newPost;
+      const postId = createdPost.id || createdPost.post_id;
+      
       const matchingQuests = quests.filter((quest) =>
-        doesPostLikelySatisfyQuest(newPost, quest)
+        doesPostLikelySatisfyQuest(createdPost, quest)
       );
+
+      console.log("matching quests:", matchingQuests);
 
       for (const quest of matchingQuests) {
         try {

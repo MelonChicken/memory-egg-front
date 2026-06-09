@@ -14,7 +14,7 @@ export function doesPostLikelySatisfyQuest(post, quest) {
   const requiredWordCount = Number(quest.required_word_count || 0);
   const hasImage = Boolean(post.image_url);
 
-  if (questType === "post_tag") {
+  if (questType === "post_tag" || questType === "tag") {
     return postTag === requiredTag;
   }
 

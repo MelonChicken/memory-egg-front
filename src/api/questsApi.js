@@ -226,10 +226,15 @@ export async function claimQuestReward({ userQuestId, postId }) {
     }),
   });
 
+  const data = await response.json().catch(() => null);
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(errorData?.error || "Failed to claim quest.");
+    throw new Error(data?.error || "Failed to claim quest.");
   }
 
-  return response.json();
+  if (data?.user) {
+    localStorage.setItem("memory_egg_user", JSON.stringify(data.user));
+  }
+
+  return data;
 }
