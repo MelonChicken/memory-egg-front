@@ -3,6 +3,7 @@
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { isAuthenticated } from "./api/userApi";
 
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
@@ -14,7 +15,6 @@ import EggDashboardPage from "./pages/EggDashboardPage.jsx";
 import InventoryPage from "./pages/InventoryPage.jsx";
 import ShopPage from "./pages/ShopPage.jsx";
 import MemoryArchivePage from "./pages/MemoryArchivePage.jsx";
-import { isAuthenticated } from "./api/userApi";
 
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) {
@@ -24,13 +24,44 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+function PublicOnlyRoute({ children }) {
+  if (isAuthenticated()) {
+    return <Navigate to="/nest" replace />;
+  }
+
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<OpeningPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/"
+          element={
+            <PublicOnlyRoute>
+              <OpeningPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <LoginPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <PublicOnlyRoute>
+              <RegisterPage />
+            </PublicOnlyRoute>
+          }
+        />
 
         <Route
           path="/nest"
