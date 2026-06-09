@@ -204,8 +204,9 @@ function InventoryPage() {
               className="equip-item-button"
               type="button"
               onClick={handleToggleEquip}
+              disabled={!selectedItem || selectedItem.is_equipped}
             >
-              {selectedItem.is_equipped ? "Unequip" : "Equip"}
+              {selectedItem?.is_equipped ? "Equipped" : "Equip"}
             </button>
           ) : (
             <button className="equip-item-button" type="button" disabled>
