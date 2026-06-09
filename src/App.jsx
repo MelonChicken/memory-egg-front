@@ -2,7 +2,11 @@
 // <div /> tests whether centered layout works.
 // <section className="panel stack-md" /> tests whether reusable panel and vertical spacing classes work.
 // <h1 /> tests title style
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { isAuthenticated } from "./api/userApi";
+
 import Header from "./components/header.jsx";
+
 import OpeningPage from "./pages/OpeningPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -43,11 +47,112 @@ function AppContent() {
   );
 }
 
-// 2. Keep your main App component clean
+function ProtectedRoute({ children }) {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+function PublicOnlyRoute({ children }) {
+  if (isAuthenticated()) {
+    return <Navigate to="/nest" replace />;
+  }
+
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicOnlyRoute>
+              <OpeningPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <LoginPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <PublicOnlyRoute>
+              <RegisterPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+        <Route
+          path="/nest"
+          element={
+            <ProtectedRoute>
+              <EggDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/write"
+          element={
+            <ProtectedRoute>
+              <WritePostPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/archive"
+          element={
+            <ProtectedRoute>
+              <MemoryArchivePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts/:id"
+          element={
+            <ProtectedRoute>
+              <ViewPostPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shop"
+          element={
+            <ProtectedRoute>
+              <ShopPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inventory"
+          element={
+            <ProtectedRoute>
+              <InventoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 }

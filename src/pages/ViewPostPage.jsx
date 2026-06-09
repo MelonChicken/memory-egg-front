@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deletePost, getPostById } from "../api/postsApi";
+import { usePosts } from "../hooks/usePosts";
 import "./ViewPostPage.css";
 
 function ViewPostPage() {
@@ -8,17 +8,39 @@ function ViewPostPage() {
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { getPost, removePost } = usePosts();
 
   useEffect(() => {
-    async function loadPost() {
-      const foundPost = await getPostById(id);
+    let ignore = false;
 
-      setPost(foundPost || null);
-      setLoading(false);
+    async function loadPost() {
+      setLoading(true);
+
+      try {
+        const foundPost = await getPost(id);
+
+        if (!ignore) {
+          setPost(foundPost || null);
+        }
+      } catch (error) {
+        console.warn("Failed to load post:", error);
+
+        if (!ignore) {
+          setPost(null);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
     }
 
     loadPost();
-  }, [id]);
+
+    return () => {
+      ignore = true;
+    };
+  }, [id, getPost]);
 
   if (loading) {
     return (
@@ -37,24 +59,23 @@ function ViewPostPage() {
     );
   }
 
-  async function handleDelete() {
-    /*
-    console.log("Delete button clicked");
-    console.log("Current post:", post);
-    */
-    const confirmed = window.confirm("Delete this memory?");
-    /*
-    console.log("Confirmed:", confirmed);
-    */
+  async function handleDeletePost() {
+    if (!post) {
+      return;
+    }
+
+    const confirmed = window.confirm("Delete this post?");
+
     if (!confirmed) {
       return;
     }
 
-    await deletePost(post.post_id);
-    /*
-    console.log("Deleted post id:", post.post_id);
-    */
-    navigate("/archive");
+    try {
+      await removePost(post.post_id || post.id);
+      navigate("/archive", { replace: true });
+    } catch (error) {
+      console.warn("Failed to delete post:", error);
+    }
   }
 
   return (
@@ -89,7 +110,7 @@ function ViewPostPage() {
           <button
             className="delete-post-button"
             type="button"
-            onClick={handleDelete}
+            onClick={handleDeletePost}
           >
             ⌫ Delete Post
           </button>

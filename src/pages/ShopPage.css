@@ -292,11 +292,26 @@
 }
 
 .shop-item-image img {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.shop-item-image-background img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+.shop-item-image-decoration img {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+}
+
+.shop-item-image-music span {
+  font-size: 2rem;
+  color: #7a5b50;
+}
 .shop-image-placeholder {
   width: 52px;
   height: 52px;
@@ -305,14 +320,13 @@
 }
 
 .shop-item-info {
-  min-height: 58px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.8rem;
   margin-top: 1rem;
 }
-
 .shop-item-info strong {
   display: block;
   color: #2f241f;
@@ -320,11 +334,16 @@
 }
 
 .shop-item-description {
-  max-width: 160px;
+  max-width: 100%;
   margin: 0.25rem 0 0;
   color: #7c7167;
   font-size: 0.68rem;
   line-height: 1.35;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .owned-label {
@@ -344,6 +363,13 @@
   color: #6a4c42;
   font-size: 0.75rem;
   font-weight: 900;
+  white-space: nowrap;
+}
+
+.owned-label,
+.price-label {
+  align-self: end;
+  justify-self: end;
   white-space: nowrap;
 }
 
@@ -551,6 +577,11 @@
     margin: 0.3rem 0 0;
     font-size: 0.72rem;
     line-height: 1.35;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .owned-label,

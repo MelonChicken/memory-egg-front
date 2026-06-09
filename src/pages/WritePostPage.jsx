@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-/* import { createPost } from "../api/postsApi"; */
 import { usePosts } from "../hooks/usePosts";
-/* import { checkPostAgainstQuests } from "../api/questsApi"; */
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useQuests } from "../hooks/useQuests";
+import { doesPostLikelySatisfyQuest } from "../utils/questMatching";
 import "./WritePostPage.css";
 
 function WritePostPage() {
   const { addPost } = usePosts();
   const { user, reloadUser } = useCurrentUser();
-  const { quests, checkPostForQuestCompletion, claimReward } = useQuests();  
+  const { quests, claimQuestForPost } = useQuests(); 
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("reflection");
   /*const [imageUrl, setImageUrl] = useState("");*/
   const [visibility, setVisibility] = useState("private");
+
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -25,30 +28,70 @@ function WritePostPage() {
   const estimatedWill = Math.max(1, Math.floor(wordCount / 10));
 
   async function handleSubmit(event) {
-    event.preventDefault(); /*Stop page from refreshing in form submit*/
+    event.preventDefault();
 
-    if (!title.trim() || !content.trim()) {
-      alert("Please write both title and content.");
+    if (submitting) {
       return;
     }
 
-    const { newPost, updatedPosts } = await addPost({
-      title,
-      content,
-      tag,
-      image_url: null,
-      visibility,
-    });
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    /*await checkPostForQuestCompletion(newPost);*/
+    if (!title.trim() || !content.trim()) {
+      setErrorMessage("Please write both title and content.");
+      return;
+    }
 
-    alert("Post created! Redirecting you to Archive Page");
-    navigate("/archive"); 
-  }
+    setSubmitting(true);
 
-  async function handleClaimQuest(questId) {
-    await claimReward(questId);
-    await reloadUser();
+    try {
+      const { newPost } = await addPost({
+        title,
+        content,
+        tag,
+        image_url: null,
+        visibility,
+      });
+
+      const createdPost = newPost.post || newPost;
+      const postId = createdPost.id || createdPost.post_id;
+
+      const matchingQuests = quests.filter((quest) =>
+        doesPostLikelySatisfyQuest(createdPost, quest)
+      );
+
+      let claimedQuestCount = 0;
+
+      for (const quest of matchingQuests) {
+        try {
+          await claimQuestForPost({
+            userQuestId: quest.user_quest_id,
+            postId,
+          });
+
+          claimedQuestCount += 1;
+        } catch (claimError) {
+          console.warn("Quest claim failed:", claimError);
+        }
+      }
+
+      await reloadUser();
+
+      if (claimedQuestCount > 0) {
+        setSuccessMessage(
+          `Post created. ${claimedQuestCount} quest reward claimed! Redirecting...`
+        );
+      } else {
+        setSuccessMessage("Post created. Redirecting...");
+      }
+
+      setTimeout(() => {
+        navigate("/archive");
+      }, 700);
+      } catch (error) {
+        setErrorMessage(error.message || "Failed to create post.");
+        setSubmitting(false);
+      }
   }
 
   return (
@@ -147,9 +190,27 @@ function WritePostPage() {
                 </label>
               </fieldset>
 
-              <button className="post-submit-button" type="submit">
-                Post
-              </button>
+              <div className="write-submit-area">
+                {errorMessage && (
+                  <p className="write-post-message write-post-message-error">
+                    {errorMessage}
+                  </p>
+                )}
+
+                {successMessage && (
+                  <p className="write-post-message write-post-message-success">
+                    {successMessage}
+                  </p>
+                )}
+
+                <button
+                  className="post-submit-button"
+                  type="submit"
+                  disabled={submitting}
+                >
+                  {submitting ? "Posting..." : "Post"}
+                </button>
+              </div>
             </div>
           </form>
         </section>
@@ -190,7 +251,7 @@ function WritePostPage() {
                         {quest.status}
                       </span>
                     </div>
-
+                    {/* REMOVED: quest completion is automated. 
                     {quest.status === "completed" && (
                       <button
                         type="button"
@@ -199,7 +260,7 @@ function WritePostPage() {
                         Claim +{quest.reward_will}
                       </button>
                     )}
-
+                    */}
                     {quest.status === "claimed" && <small>Reward claimed</small>}
                   </article>
                 ))}

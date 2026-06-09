@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { createPost, deletePost, getAllPosts } from "../api/postsApi";
+import { createPost, deletePost, getAllPosts, getPostById } from "../api/postsApi";
 
 export function usePosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const reloadPosts = useCallback(async () => {
     setLoading(true);
@@ -39,6 +40,17 @@ export function usePosts() {
     return true;
   }, []);
 
+  const getPost = useCallback(async (postId) => {
+    setErrorMessage("");
+
+    try {
+      return await getPostById(postId);
+    } catch (error) {
+      setErrorMessage(error.message || "Failed to load post.");
+      throw error;
+    }
+  }, []);
+
   useEffect(() => {
     let ignore = false;
 
@@ -63,8 +75,10 @@ export function usePosts() {
   return {
     posts,
     loading,
+    errorMessage,
     addPost,
     removePost,
+    getPost,
     reloadPosts,
   };
 }

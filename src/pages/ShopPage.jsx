@@ -1,6 +1,10 @@
 import { useMemo, useState } from "react";
 import { useShop } from "../hooks/useShop";
 import "./ShopPage.css";
+import {
+  getBackgroundAsset,
+  getCosmeticAsset,
+} from "../assets/assetRegistry";
 
 const shopCategories = [
   {
@@ -19,6 +23,22 @@ const shopCategories = [
     icon: "♪",
   },
 ];
+
+function getShopItemImage(item) {
+  if (!item?.asset_key) {
+    return item?.asset_url || null;
+  }
+
+  if (item.item_type === "background") {
+    return getBackgroundAsset(item.asset_key);
+  }
+
+  if (item.item_type === "decoration") {
+    return getCosmeticAsset(item.asset_key);
+  }
+
+  return item.asset_url || null;
+}
 
 function ShopPage() {
   const [activeCategory, setActiveCategory] = useState("background");
@@ -50,6 +70,20 @@ function ShopPage() {
     return visibleItems[0] ?? null;
   }, [activeCategory, selectedItemId, shopItems, visibleItems]);
 
+  const userWillBalance = Number(user?.will_balance || 0);
+
+  const cannotAffordSelectedItem =
+    selectedItem && userWillBalance < Number(selectedItem.price);
+
+  const shouldShowNotEnoughWill =
+    selectedItem && !selectedItem.owned && cannotAffordSelectedItem;
+
+  const isBuyButtonDisabled =
+    !user ||
+    !selectedItem ||
+    selectedItem.owned ||
+    cannotAffordSelectedItem;
+
   function handleCategoryChange(categoryId) {
     const firstItem = shopItems.find(
       (item) => item.item_type === categoryId && item.is_active
@@ -60,7 +94,7 @@ function ShopPage() {
   }
 
   async function handlePurchaseSelectedItem() {
-    if (!selectedItem) {
+    if (!selectedItem || selectedItem.owned || cannotAffordSelectedItem) {
       return;
     }
 
@@ -127,11 +161,11 @@ function ShopPage() {
                     type="button"
                     onClick={() => setSelectedItemId(item.item_id)}
                   >
-                    <div className="shop-item-image">
-                      {item.asset_url ? (
-                        <img src={item.asset_url} alt={item.name} />
+                    <div className={`shop-item-image shop-item-image-${item.item_type}`}>
+                      {getShopItemImage(item) ? (
+                        <img src={getShopItemImage(item)} alt={item.name} />
                       ) : (
-                        <span>▧</span>
+                        <span>{item.item_type === "music" ? "♪" : "▧"}</span>
                       )}
                     </div>
 
@@ -162,29 +196,22 @@ function ShopPage() {
           </a>
 
           <div className="shop-footer-actions">
-            {(errorMessage ||
-              (selectedItem && user && user.will_balance < selectedItem.price)) && (
-              <p className="shop-error-message">
-                {errorMessage || "Not enough Will."}
-              </p>
+            {errorMessage && (
+              <p className="shop-error-message">{errorMessage}</p>
             )}
 
-            {selectedItem && !selectedItem.owned && (
-              <button
-                className="buy-item-button"
-                type="button"
-                onClick={handlePurchaseSelectedItem}
-                disabled={!user || user.will_balance < selectedItem.price}
-              >
-                Buy Item
-              </button>
+            {!errorMessage && shouldShowNotEnoughWill && (
+              <p className="shop-error-message">Not enough Will.</p>
             )}
 
-            {selectedItem?.owned && (
-              <button className="buy-item-button" type="button" disabled>
-                Owned
-              </button>
-            )}
+            <button
+              className="buy-item-button"
+              type="button"
+              onClick={handlePurchaseSelectedItem}
+              disabled={isBuyButtonDisabled}
+            >
+              {selectedItem?.owned ? "Owned" : "Buy Item"}
+            </button>
           </div>
         </footer>
       </section>
