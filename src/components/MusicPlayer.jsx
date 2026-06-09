@@ -64,6 +64,7 @@ export default function MusicPlayer() {
   const audioRef = useRef(null);
   const dragStateRef = useRef(null);
   const movedDuringDragRef = useRef(false);
+  const previousMusicKeyRef = useRef(null);
 
   const [collapsed, setCollapsed] = useState(
     localStorage.getItem("memory_egg_music_player_collapsed") === "true"
@@ -111,12 +112,18 @@ export default function MusicPlayer() {
   }, [position]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      audioRef.current.load();
+    if (previousMusicKeyRef.current === selectedMusicKey) {
+        return;
     }
-  }, [selectedMusicSrc]);
+
+    previousMusicKeyRef.current = selectedMusicKey;
+
+    if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.load();
+    }
+  }, [selectedMusicKey]);
 
   useEffect(() => {
     function handleInventoryOrEggUpdate() {
@@ -262,7 +269,7 @@ export default function MusicPlayer() {
     setPlaying(false);
   }
 
-  if (loading) {
+  if (loading && !egg) {
     return null;
   }
 
